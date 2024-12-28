@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Update
 
 @Dao
-interface UserDao {
+interface UsersDao {
     @Update
     suspend fun updateTheme(users: Users)
 
