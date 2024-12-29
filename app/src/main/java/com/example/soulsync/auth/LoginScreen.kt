@@ -44,7 +44,9 @@ import com.example.soulsync.R
 
 @Preview(showBackground = true, showSystemUi = true, name="Login Screen")
 @Composable
-fun LoginUser(){
+fun LoginUser(
+    onNavigateToRegister: () -> Unit = {}
+){
     var email = remember { mutableStateOf("") }
     var password = remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
@@ -76,7 +78,7 @@ fun LoginUser(){
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { /*TODO*/ }
+                modifier = Modifier.clickable { onNavigateToRegister }
             )
 
             Spacer(modifier = Modifier.padding(15.dp))
