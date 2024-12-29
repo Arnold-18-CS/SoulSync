@@ -16,9 +16,9 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,12 +28,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,16 +54,29 @@ fun LoginUser(){
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF9F4FF))
+            .background(
+                brush = Brush.verticalGradient(colors = listOf(Color(0xFFBC9CE3), Color(0xFFD1C3E1)))
+            )
     ){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Text(
-                text = "Login User",
-                fontSize = 24.sp,
+                text = "Sign In",
+                fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
 //                fontFamily = appFont
+            )
+
+            Spacer(modifier = Modifier.padding(10.dp))
+
+            Text(
+                text = "Don't have an account yet? Click here",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable { /*TODO*/ }
             )
 
             Spacer(modifier = Modifier.padding(15.dp))
@@ -125,6 +140,17 @@ fun LoginUser(){
                 modifier = Modifier.size(width = 350.dp, height = 70.dp)
             )
 
+            Spacer(modifier = Modifier.padding(10.dp))
+
+            Text(
+                text = "Forgot Password",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable { /*TODO*/ }
+            )
+            
             Spacer(modifier = Modifier.padding(20.dp))
 
             ElevatedButton(
@@ -143,7 +169,7 @@ fun LoginUser(){
                 modifier = Modifier.size(width = 300.dp, height = 70.dp)
             ){
                 Text(
-                    text = "Login",
+                    text = "Sign In",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )

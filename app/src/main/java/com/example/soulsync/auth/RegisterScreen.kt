@@ -28,12 +28,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,13 +55,15 @@ fun RegisterUser(){
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF9F4FF))
+            .background(
+                brush = Brush.verticalGradient(colors = listOf(Color(0xFFBC9CE3), Color(0xFFD1C3E1)))
+            )
     ){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Register User",
+                text = "Sign Up",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
 //                fontFamily = appFont,
@@ -147,6 +151,17 @@ fun RegisterUser(){
                 modifier = Modifier.size(width = 350.dp, height = 70.dp)
             )
 
+            Spacer(modifier = Modifier.padding(10.dp))
+
+            Text(
+                text = "Already have an account? Click here",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable { /*TODO*/ }
+            )
+
             Spacer(modifier = Modifier.padding(20.dp))
 
             ElevatedButton(
@@ -165,7 +180,7 @@ fun RegisterUser(){
                 modifier = Modifier.size(width = 300.dp, height = 70.dp)
             ){
                 Text(
-                    text = "Register",
+                    text = "Sign Up",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
