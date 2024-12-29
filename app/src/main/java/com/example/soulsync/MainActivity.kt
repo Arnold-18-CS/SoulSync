@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -51,7 +52,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun StartScreen(){
     val appFont = FontFamily(Font(R.font.emilys_candy, FontWeight.Normal))
-    val image = painterResource(id = R.drawable.transparent_soulssyn)
+    val image = painterResource(id = R.drawable.soul_sync_logo)
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -80,7 +81,7 @@ fun StartScreen(){
                 contentDescription = "SoulSync Logo",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .size(width = 400.dp, height = 300.dp)
                     .clip(shape = CircleShape)
             )
 
