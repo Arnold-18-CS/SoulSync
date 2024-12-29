@@ -1,5 +1,6 @@
 package com.example.soulsync.auth
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,10 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonElevation
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -23,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -44,7 +50,9 @@ fun LoginUser(){
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF9F4FF))
     ){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -116,6 +124,30 @@ fun LoginUser(){
                 },
                 modifier = Modifier.size(width = 350.dp, height = 70.dp)
             )
+
+            Spacer(modifier = Modifier.padding(20.dp))
+
+            ElevatedButton(
+                onClick = { /*TODO*/ },
+                colors = ButtonColors(
+                    containerColor = Color(0xFF9279C4),
+                    contentColor = Color.White,
+                    disabledContainerColor = Color.LightGray,
+                    disabledContentColor = Color.Black
+                ),
+                elevation = ButtonDefaults.elevatedButtonElevation(
+                    defaultElevation = 13.dp,
+                    pressedElevation = 3.dp,
+                    disabledElevation = 0.dp
+                ),
+                modifier = Modifier.size(width = 300.dp, height = 70.dp)
+            ){
+                Text(
+                    text = "Login",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
