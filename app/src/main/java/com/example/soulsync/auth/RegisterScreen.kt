@@ -28,8 +28,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +50,8 @@ fun RegisterUser(
     onNavigateToLogin: () -> Unit = {}
 ){
 
+    val bg_image = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
+
     var email = remember { mutableStateOf("") }
     var password = remember { mutableStateOf("") }
     var confirmPassword = remember { mutableStateOf("") }
@@ -57,8 +62,10 @@ fun RegisterUser(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(colors = listOf(Color(0xFFBC9CE3), Color(0xFFD1C3E1)))
+            .paint(
+                painter = bg_image,
+                contentScale = ContentScale.FillBounds,
+                alpha = 0.4f
             )
     ){
         Column(
@@ -68,7 +75,7 @@ fun RegisterUser(
                 text = "Sign Up",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-//                fontFamily = appFont,
+                fontFamily = appFont,
                 modifier = Modifier.padding(15.dp)
                 )
 
@@ -161,7 +168,7 @@ fun RegisterUser(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { onNavigateToLogin }
+                modifier = Modifier.clickable { onNavigateToLogin() }
             )
 
             Spacer(modifier = Modifier.padding(20.dp))

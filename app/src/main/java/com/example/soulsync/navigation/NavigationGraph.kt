@@ -14,7 +14,7 @@ fun NavigationGraph(navController: NavHostController) {
         navController = navController,
         startDestination = AppDestinations.StartScreen.route
     ) {
-        composable(AppDestinations.StartScreen.route) {
+        composable(route = AppDestinations.StartScreen.route) {
             StartScreen(
                 onNavigateToLogin = { navController.navigate(AppDestinations.LoginScreen.route) },
                 onNavigateToRegister = { navController.navigate(AppDestinations.RegisterScreen.route) }

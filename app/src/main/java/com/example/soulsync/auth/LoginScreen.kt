@@ -1,5 +1,6 @@
 package com.example.soulsync.auth
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -28,8 +29,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +52,9 @@ import com.example.soulsync.R
 fun LoginUser(
     onNavigateToRegister: () -> Unit = {}
 ){
+
+    val bg_image = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
+
     var email = remember { mutableStateOf("") }
     var password = remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
@@ -56,9 +64,11 @@ fun LoginUser(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(colors = listOf(Color(0xFFBC9CE3), Color(0xFFD1C3E1)))
-            )
+            .paint(
+                painter = bg_image,
+                contentScale = ContentScale.FillBounds,
+                alpha = 0.4f
+                )
     ){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -67,7 +77,7 @@ fun LoginUser(
                 text = "Sign In",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-//                fontFamily = appFont
+                fontFamily = appFont
             )
 
             Spacer(modifier = Modifier.padding(10.dp))
@@ -78,7 +88,7 @@ fun LoginUser(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { onNavigateToRegister }
+                modifier = Modifier.clickable { onNavigateToRegister() }
             )
 
             Spacer(modifier = Modifier.padding(15.dp))

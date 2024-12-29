@@ -1,7 +1,6 @@
 package com.example.soulsync
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,8 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -35,19 +35,19 @@ fun StartScreen(
     onNavigateToLogin: () -> Unit = {},
     onNavigateToRegister: () -> Unit = {}
 ){
+
+    val bgImage = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
+
     val appFont = FontFamily(Font(R.font.emilys_candy, FontWeight.Normal))
     val image = painterResource(id = R.drawable.soul_sync_logo)
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFD1C3E1),
-                        Color(0xFFBC9CE3)
-                    )
-                )
+            .paint(
+                painter = bgImage,
+                contentScale = ContentScale.FillBounds,
+                alpha = 0.4f
             )
     ) {
         Column(
@@ -68,11 +68,12 @@ fun StartScreen(
                     .size(width = 400.dp, height = 300.dp)
                     .clip(shape = CircleShape)
                     .padding(start = 20.dp)
+                    .graphicsLayer { this.rotationZ = 2f }
             )
 
             Row{
                 ElevatedButton(
-                    onClick = { onNavigateToLogin },
+                    onClick = { onNavigateToLogin() },
                     colors = ButtonColors(
                         containerColor = Color(0xFF9279C4),
                         contentColor = Color.White,
@@ -97,7 +98,7 @@ fun StartScreen(
                 Spacer(modifier = Modifier.size(width = 20.dp, height = 0.dp))
 
                 ElevatedButton(
-                    onClick = { onNavigateToRegister },
+                    onClick = { onNavigateToRegister() },
                     colors = ButtonColors(
                         containerColor = Color(0xFFD7CCE5),
                         contentColor = Color(0xFF9279C4),
