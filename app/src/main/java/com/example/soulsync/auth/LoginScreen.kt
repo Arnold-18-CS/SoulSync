@@ -235,12 +235,7 @@ fun LoginUser(
                         fontSize = 14.sp,
                         modifier = Modifier.padding(top = 8.dp)
                     )
-                    // Navigate to the home screen after a delay
-                    LaunchedEffect(loginState) {
-                        Log.d("Navigation", "Navigating to home")
-                        kotlinx.coroutines.delay(2000) // Optional delay
-                        onNavigateToHome()
-                    }
+                    onNavigateToHome()
                 }
                 else -> Unit
             }

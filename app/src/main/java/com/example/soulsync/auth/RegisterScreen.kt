@@ -45,13 +45,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soulsync.R
 
 @Preview(showBackground = true, showSystemUi = true, name="Register Screen")
 @Composable
 fun RegisterUser(
     onNavigateToLogin: () -> Unit = {},
-    authViewModel: AuthViewModel = AuthViewModel()
+    authViewModel: AuthViewModel = viewModel()
 ){
 
     val bgImage = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
@@ -191,7 +192,7 @@ fun RegisterUser(
                 onClick = {
                     if(email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty()){
                         if(password.value == confirmPassword.value){
-                            authViewModel.registerUserWithFirebase(email.value, password.value)
+                            authViewModel.registerUser(email.value, password.value)
                         }else{
                             authViewModel.setRegisterState("Passwords do not match")
                         }
