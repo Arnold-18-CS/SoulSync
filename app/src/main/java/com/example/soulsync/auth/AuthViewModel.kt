@@ -15,6 +15,14 @@ class AuthViewModel : ViewModel() {
     // Initialize Firebase Authentication instance
     private val auth = FirebaseAuth.getInstance()
 
+    // Sealed class to represent the different states of the login process
+    sealed class LoginState {
+        object Initial : LoginState() // Initial state when no login attempt is in progress
+        object Loading : LoginState() // State indicating that the login process is in progress
+        data class Error(val message: String) : LoginState() // State representing an error with the login process
+        object Success : LoginState() // State indicating a successful login
+    }
+
     // State to represent the login process, set to prevent external modification
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Initial)
     val loginState: StateFlow<LoginState> = _loginState
@@ -48,6 +56,14 @@ class AuthViewModel : ViewModel() {
         _loginState.value = LoginState.Error(message)
     }
 
+    // Sealed class to represent the different states of the registration process
+    sealed class RegisterState {
+        object Initial : RegisterState() // Initial state when no registration attempt is in progress
+        object Loading : RegisterState() // State indicating that the registration process is in progress
+        data class Error(val message: String) : RegisterState() // State representing an error with the registration process
+        object Success : RegisterState() // State indicating a successful registration
+    }
+
     // State to represent the registration process, set to prevent external modification
     private val _registerState = MutableStateFlow<RegisterState>(RegisterState.Initial)
     val registerState: StateFlow<RegisterState> = _registerState
@@ -73,21 +89,6 @@ class AuthViewModel : ViewModel() {
         _registerState.value = RegisterState.Error(message)
     }
 
-    // Sealed class to represent the different states of the login process
-    sealed class LoginState {
-        object Initial : LoginState() // Initial state when no login attempt is in progress
-        object Loading : LoginState() // State indicating that the login process is in progress
-        data class Error(val message: String) : LoginState() // State representing an error with the login process
-        object Success : LoginState() // State indicating a successful login
-    }
-
-    // Sealed class to represent the different states of the registration process
-    sealed class RegisterState {
-        object Initial : RegisterState() // Initial state when no registration attempt is in progress
-        object Loading : RegisterState() // State indicating that the registration process is in progress
-        data class Error(val message: String) : RegisterState() // State representing an error with the registration process
-        object Success : RegisterState() // State indicating a successful registration
-    }
 }
 
 
