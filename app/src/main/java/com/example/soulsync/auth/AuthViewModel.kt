@@ -1,19 +1,21 @@
 package com.example.soulsync.auth
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import javax.inject.Inject
 
 // Manage login and registration logic using Firebase Authentication
-class AuthViewModel : ViewModel() {
-    // Initialize Firebase Authentication instance
-    private val auth = FirebaseAuth.getInstance()
+class AuthViewModel @Inject constructor(private val auth :FirebaseAuth) : ViewModel() {
 
     // Sealed class to represent the different states of the login process
     sealed class LoginState {
@@ -27,28 +29,36 @@ class AuthViewModel : ViewModel() {
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Initial)
     val loginState: StateFlow<LoginState> = _loginState
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private suspend fun signInWithFirebase(email: String, password: String): Result<Unit>{
+        return suspendCancellableCoroutine { continuation ->
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener{task->
+                    if(task.isSuccessful){
+                        continuation.resume(Result.success(Unit), null)
+                    }else{
+                        val errorMessage = when(task.exception){
+                            is FirebaseAuthInvalidUserException -> "No account found with this email"
+                            is FirebaseAuthInvalidCredentialsException -> "Incorrect password"
+                            else -> "Login failed. Please try again"
+                        }
+                        continuation.resume(Result.failure(Exception(errorMessage)), null)
+                    }
+                }
+        }
+    }
+
     // Run the login process as a coroutine using viewModelScope
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
             // Set the login state to loading before the login process; notify UI that the process is starting
             _loginState.value = LoginState.Loading
-            // Using Firebase's signInWithEmailAndPassword method to authenticate the user
-            auth.signInWithEmailAndPassword(email, password)
-                // Callback to handle the result of the login process
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d("Login", "Login successful")
-                        _loginState.value = LoginState.Success
-                    } else {
-                        val errorMessage = when (task.exception) {
-                            is FirebaseAuthInvalidUserException -> "No account found with this email"
-                            is FirebaseAuthInvalidCredentialsException -> "Incorrect password"
-                            else -> "Login failed. Please try again"
-                        }
-                        _loginState.value =
-                            LoginState.Error(errorMessage)
-                    }
-                }
+            try {
+                signInWithFirebase(email, password)
+                _loginState.value = LoginState.Success
+            } catch (e: Exception) {
+                _loginState.value = LoginState.Error(e.message ?: "Login failed")
+            }
         }
     }
 
@@ -68,19 +78,36 @@ class AuthViewModel : ViewModel() {
     private val _registerState = MutableStateFlow<RegisterState>(RegisterState.Initial)
     val registerState: StateFlow<RegisterState> = _registerState
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private suspend fun registerUserWithFirebase(email: String, password: String): Result<Unit> {
+        return suspendCancellableCoroutine { continuation ->
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        continuation.resume(Result.success(Unit), null)
+                    } else {
+                        val errorMessage = when (task.exception) {
+                            is FirebaseAuthWeakPasswordException -> "Password is too weak.\n *Must be at least 8 characters"
+                            is FirebaseAuthInvalidCredentialsException -> "Incorrect email format"
+                            is FirebaseAuthUserCollisionException -> "Account already exists with this email"
+                            else -> "Registration failed. Please try again"
+                        }
+                        _registerState.value = RegisterState.Error(errorMessage)
+                    }
+                }
+        }
+    }
+
     // Run the registration process as a coroutine using viewModelScope
     fun registerUser(email: String, password: String) {
         viewModelScope.launch {
             _registerState.value = RegisterState.Loading
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        _registerState.value = RegisterState.Success
-                    } else {
-                        _registerState.value =
-                            RegisterState.Error(task.exception?.message ?: "Registration failed")
-                    }
-                }
+            try {
+                registerUserWithFirebase(email, password)
+                _registerState.value = RegisterState.Success
+            }catch (e: Exception) {
+                RegisterState.Error(e.message ?: "Registration failed")
+            }
         }
     }
 

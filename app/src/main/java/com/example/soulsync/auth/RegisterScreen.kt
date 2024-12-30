@@ -191,7 +191,7 @@ fun RegisterUser(
                 onClick = {
                     if(email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty()){
                         if(password.value == confirmPassword.value){
-                            authViewModel.registerUser(email.value, password.value)
+                            authViewModel.registerUserWithFirebase(email.value, password.value)
                         }else{
                             authViewModel.setRegisterState("Passwords do not match")
                         }
