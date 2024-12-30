@@ -1,8 +1,11 @@
 package com.example.soulsync.auth
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -26,15 +29,24 @@ class AuthViewModel : ViewModel() {
                 // Callback to handle the result of the login process
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        Log.d("Login", "Login successful")
                         _loginState.value = LoginState.Success
                     } else {
+                        val errorMessage = when (task.exception) {
+                            is FirebaseAuthInvalidUserException -> "No account found with this email"
+                            is FirebaseAuthInvalidCredentialsException -> "Incorrect password"
+                            else -> "Login failed. Please try again"
+                        }
                         _loginState.value =
-                            LoginState.Error(task.exception?.message ?: "Login failed")
+                            LoginState.Error(errorMessage)
                     }
                 }
         }
     }
 
+    fun setLoginError(message: String) {
+        _loginState.value = LoginState.Error(message)
+    }
 
     // State to represent the registration process, set to prevent external modification
     private val _registerState = MutableStateFlow<RegisterState>(RegisterState.Initial)
