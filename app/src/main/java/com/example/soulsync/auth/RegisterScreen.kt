@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Visibility
@@ -96,6 +97,13 @@ fun RegisterUser(
                 leadingIcon = {
                     Icon(imageVector = Icons.Default.Email, contentDescription = "Email")
                               },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Clear Email",
+                        modifier = Modifier.clickable { email.value = "" }
+                    )
+                },
                 modifier = Modifier.size(width = 350.dp, height = 70.dp)
             )
 
