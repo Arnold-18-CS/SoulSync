@@ -4,11 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.soulsync.AppHome
 import com.example.soulsync.StartScreen
+import com.example.soulsync.auth.AppHome
 import com.example.soulsync.auth.LoginUser
 import com.example.soulsync.auth.RegisterUser
-import com.example.soulsync.navigation.AppDestinations.HomeScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
@@ -16,17 +15,11 @@ fun NavigationGraph(navController: NavHostController) {
         navController = navController,
         startDestination = AppDestinations.StartScreen.route
     ) {
+
         composable(route = AppDestinations.StartScreen.route) {
             StartScreen(
                 onNavigateToLogin = { navController.navigate(AppDestinations.LoginScreen.route) },
                 onNavigateToRegister = { navController.navigate(AppDestinations.RegisterScreen.route) }
-            )
-        }
-
-        composable(AppDestinations.LoginScreen.route) {
-            LoginUser(
-                onNavigateToRegister = { navController.navigate(AppDestinations.RegisterScreen.route) },
-                onNavigateToHome = { navController.navigate(HomeScreen.route) }
             )
         }
 
@@ -36,8 +29,19 @@ fun NavigationGraph(navController: NavHostController) {
             )
         }
 
+        composable(AppDestinations.LoginScreen.route) {
+            LoginUser(
+                onNavigateToRegister = { navController.navigate(AppDestinations.RegisterScreen.route) },
+                onNavigateToHome = { navController.navigate(AppDestinations.HomeScreen.route) }
+            )
+        }
+
         composable(AppDestinations.HomeScreen.route) {
-            AppHome()
+            AppHome(
+                onNavigateToLogin = { navController.navigate(AppDestinations.LoginScreen.route) },
+                onNavigateToRegister = { navController.navigate(AppDestinations.RegisterScreen.route) },
+                onNavigateToStart = { navController.navigate(AppDestinations.StartScreen.route) }
+            )
         }
 
     }
