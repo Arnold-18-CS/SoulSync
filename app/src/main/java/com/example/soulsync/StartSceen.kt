@@ -8,16 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -25,7 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.soulsync.ui.theme.AppColors
+import com.example.soulsync.ui.theme.SSPrimaryButton
+import com.example.soulsync.ui.theme.SSSecondaryButton
 
 /**
  * StartScreen allows users to navigate to Login or Register screens.
@@ -86,47 +83,21 @@ fun StartScreen(
                 content = {
                     item{
                         // Sign In Button
-                        ElevatedButton(
+                        SSPrimaryButton(
+                            text = "Sign In",
                             onClick = { onNavigateToLogin() },
-                            colors = ButtonDefaults.elevatedButtonColors(
-                                containerColor = Color(AppColors.SSPrimaryPurple.value),
-                                contentColor = Color(AppColors.SSWhite.value)
-                            ),
-                            elevation = ButtonDefaults.elevatedButtonElevation(
-                                defaultElevation = 13.dp,
-                                pressedElevation = 3.dp
-                            ),
                             modifier = Modifier
                                 .size(width = 150.dp, height = 70.dp)
-                        ){
-                            Text(
-                                text = "Sign In",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                        )
                     }
                     item{
                         // Sign Up Button
-                        ElevatedButton(
+                        SSSecondaryButton(
+                            text = "Sign Up",
                             onClick = { onNavigateToRegister() },
-                            colors = ButtonDefaults.elevatedButtonColors(
-                                containerColor = Color(AppColors.SSSecondaryPurple.value),
-                                contentColor = Color(AppColors.SSPrimaryPurple.value),
-                            ),
-                            elevation = ButtonDefaults.elevatedButtonElevation(
-                                defaultElevation = 13.dp,
-                                pressedElevation = 3.dp,
-                            ),
                             modifier = Modifier
                                 .size(width = 150.dp, height = 70.dp)
-                        ){
-                            Text(
-                                text = "Sign Up",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                        )
                     }
                 }
             )

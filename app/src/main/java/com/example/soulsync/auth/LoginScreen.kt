@@ -7,20 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Password
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,11 +22,7 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,6 +30,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soulsync.R
 import com.example.soulsync.ui.theme.AppColors
+import com.example.soulsync.ui.theme.EmailTextField
+import com.example.soulsync.ui.theme.PasswordTextField
+import com.example.soulsync.ui.theme.SSPrimaryButton
 
 /**
  * LoginScreen allows users to navigate to login using email.
@@ -107,76 +94,20 @@ fun LoginUser(
             Spacer(modifier = Modifier.padding(15.dp))
 
             // Email text field
-            OutlinedTextField(
-                value = email.value,
-                onValueChange = { email.value = it },
-                label = { Text("Email") },
-                placeholder = { Text("Enter your email") },
-                singleLine = true,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = "Email"
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "Clear Email",
-                        modifier = Modifier.clickable { email.value = "" }
-                    )
-                },
+            EmailTextField(
+                text = email.value,
+                onTextChange = { email.value = it },
                 modifier = Modifier.size(width = 350.dp, height = 70.dp)
             )
 
             Spacer(modifier = Modifier.padding(12.dp))
 
             // Password entry field
-            OutlinedTextField(
-                value = password.value,
-                onValueChange = { password.value = it },
-                label = { Text("Password") },
-                placeholder = { Text("Enter your password") },
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Black,
-                    unfocusedBorderColor = Color(0xFF66666B),
-                    focusedLabelColor = Color.Black,
-                    unfocusedLabelColor = Color(0xFF66666B),
-                    cursorColor = Color.Black,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color(0xFF66666B),
-                    unfocusedLeadingIconColor = Color(0xFF66666B),
-                    focusedLeadingIconColor = Color.Black,
-                    unfocusedTrailingIconColor = Color(0xFF66666B),
-                    focusedTrailingIconColor = Color.Black
-                ),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Password,
-                        contentDescription = "Password"
-                    )
-                },
-                trailingIcon = {
-                    if(showPassword){
-                        Icon(
-                            imageVector = Icons.Filled.Visibility,
-                            contentDescription = "Toggle Password Visibility",
-                            modifier = Modifier.clickable { showPassword = !showPassword }
-                        )
-                    }else{
-                        Icon(
-                            imageVector = Icons.Filled.VisibilityOff,
-                            contentDescription = "Toggle Password Visibility",
-                            modifier = Modifier.clickable { showPassword = !showPassword }
-                        )
-                    }
-                },
-                visualTransformation = if(showPassword){
-                    VisualTransformation.None
-                }else{
-                    PasswordVisualTransformation()
-                },
+            PasswordTextField(
+                password = password.value,
+                onPasswordChange = { password.value = it },
+                showPassword = showPassword,
+                onTogglePasswordVisibility = { showPassword = !showPassword },
                 modifier = Modifier.size(width = 350.dp, height = 70.dp)
             )
 
@@ -194,7 +125,8 @@ fun LoginUser(
             Spacer(modifier = Modifier.padding(20.dp))
 
             // Login button
-            ElevatedButton(
+            SSPrimaryButton(
+                text = "Sign In",
                 onClick = {
                     if(email.value.isNotEmpty() && password.value.isNotEmpty()){
                         authViewModel.loginUser(email.value, password.value)
@@ -202,22 +134,9 @@ fun LoginUser(
                         authViewModel.setLoginError("!! Please fill in both fields !!")
                     }
                 },
-                colors = ButtonDefaults.elevatedButtonColors(
-                    containerColor = Color(AppColors.SSPrimaryPurple.value),
-                    contentColor = Color(AppColors.SSWhite.value),
-                ),
-                elevation = ButtonDefaults.elevatedButtonElevation(
-                    defaultElevation = 13.dp,
-                    pressedElevation = 3.dp,
-                ),
-                modifier = Modifier.size(width = 300.dp, height = 70.dp)
-            ){
-                Text(
-                    text = "Sign In",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+                isLoading = loginState is AuthViewModel.LoginState.Loading,
+                enabled = email.value.isNotEmpty() && password.value.isNotEmpty()
+            )
 
             Spacer(modifier = Modifier.padding(10.dp))
 
