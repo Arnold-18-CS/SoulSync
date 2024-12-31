@@ -45,19 +45,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soulsync.R
+import com.example.soulsync.ui.theme.AppColors
 
+/**
+ * LoginScreen allows users to navigate to login using email.
+ * @param onNavigateToRegister Callback when the user does not have an account.
+ * @param onNavigateToHome Callback when the login is successful.
+ */
 @Composable
 fun LoginUser(
     onNavigateToRegister: () -> Unit = {},
     onNavigateToHome: () -> Unit = {},
 ){
 
+    // Fetching the background image and storing its alpha
     val bgImage = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
+    val alpha = remember { 0.4f }
 
+    // Initializing variables for user input
     var email = remember { mutableStateOf("") }
     var password = remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
-    val appFont = FontFamily(Font(R.font.emilys_candy, FontWeight.Normal))
 
     // Observe the login state using the authViewModel
     val authViewModel: AuthViewModel = hiltViewModel()
@@ -70,32 +78,35 @@ fun LoginUser(
             .paint(
                 painter = bgImage,
                 contentScale = ContentScale.FillBounds,
-                alpha = 0.4f
+                alpha = alpha
                 )
     ){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
+            // Header text for the page
             Text(
                 text = "Sign In",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = appFont
+                fontFamily = MaterialTheme.typography.bodyLarge.fontFamily
             )
 
             Spacer(modifier = Modifier.padding(10.dp))
 
+            // Clickable link to reroute to register page
             Text(
                 text = "Don't have an account yet? Click here",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
+                color = AppColors.SSPrimaryPurple,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.clickable { onNavigateToRegister() }
             )
 
             Spacer(modifier = Modifier.padding(15.dp))
 
+            // Email text field
             OutlinedTextField(
                 value = email.value,
                 onValueChange = { email.value = it },
@@ -120,6 +131,7 @@ fun LoginUser(
 
             Spacer(modifier = Modifier.padding(12.dp))
 
+            // Password entry field
             OutlinedTextField(
                 value = password.value,
                 onValueChange = { password.value = it },
@@ -174,13 +186,14 @@ fun LoginUser(
                 text = "Forgot Password",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
+                color = AppColors.SSPrimaryPurple,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.clickable { /*TODO*/ }
             )
             
             Spacer(modifier = Modifier.padding(20.dp))
 
+            // Login button
             ElevatedButton(
                 onClick = {
                     if(email.value.isNotEmpty() && password.value.isNotEmpty()){
@@ -189,16 +202,13 @@ fun LoginUser(
                         authViewModel.setLoginError("!! Please fill in both fields !!")
                     }
                 },
-                colors = ButtonColors(
-                    containerColor = Color(0xFF9279C4),
-                    contentColor = Color.White,
-                    disabledContainerColor = Color.LightGray,
-                    disabledContentColor = Color.Black
+                colors = ButtonDefaults.elevatedButtonColors(
+                    containerColor = Color(AppColors.SSPrimaryPurple.value),
+                    contentColor = Color(AppColors.SSWhite.value),
                 ),
                 elevation = ButtonDefaults.elevatedButtonElevation(
                     defaultElevation = 13.dp,
                     pressedElevation = 3.dp,
-                    disabledElevation = 0.dp
                 ),
                 modifier = Modifier.size(width = 300.dp, height = 70.dp)
             ){
@@ -211,10 +221,13 @@ fun LoginUser(
 
             Spacer(modifier = Modifier.padding(10.dp))
 
+            // Handling different login states on UI
             when(loginState){
+                // Show progress indicator if loading
                 is AuthViewModel.LoginState.Loading -> {
                     CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                 }
+                // Show red error message if login fails
                 is AuthViewModel.LoginState.Error -> {
                     val errorMessage = (loginState as AuthViewModel.LoginState.Error).message
                     Text(
@@ -224,6 +237,7 @@ fun LoginUser(
                         modifier = Modifier.padding(top = 8.dp)
                     )
                 }
+                // Show green success message then reroute
                 is AuthViewModel.LoginState.Success -> {
                     Text(
                         text = "Login successful! Redirecting...",
@@ -239,6 +253,7 @@ fun LoginUser(
     }
 }
 
+// Preview Function for login screen
 @Preview(showBackground = true, showSystemUi = true, name="Login Screen")
 @Composable
 fun LoginUserPreview(){
