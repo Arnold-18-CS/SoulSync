@@ -72,6 +72,7 @@ fun RegisterUser(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             // Header for screen
             Text(
                 text = "Sign Up",
