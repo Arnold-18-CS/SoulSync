@@ -1,7 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.android) version "2.0.21"
     alias(libs.plugins.kotlin.compose)
+    id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.kapt")
     id("com.google.gms.google-services")
     id("com.google.devtools.ksp")
 }
@@ -63,7 +65,7 @@ dependencies {
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 
-    implementation(platform("androidx.compose:compose-bom:2024.12.01"))
+    implementation("androidx.compose:compose-bom:2024.12.01")
     implementation("androidx.compose.material3:material3")
     implementation ("androidx.compose.material:material-icons-extended")
 
@@ -99,4 +101,9 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
     // Testing Navigation
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+
+
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }
