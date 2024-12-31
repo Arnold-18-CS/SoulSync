@@ -43,16 +43,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soulsync.R
 
-
-@Preview(showBackground = true, showSystemUi = true, name="Login Screen")
 @Composable
 fun LoginUser(
     onNavigateToRegister: () -> Unit = {},
     onNavigateToHome: () -> Unit = {},
-    authViewModel: AuthViewModel = viewModel()
 ){
 
     val bgImage = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
@@ -63,6 +60,7 @@ fun LoginUser(
     val appFont = FontFamily(Font(R.font.emilys_candy, FontWeight.Normal))
 
     // Observe the login state using the authViewModel
+    val authViewModel: AuthViewModel = hiltViewModel()
     val loginState by authViewModel.loginState.collectAsState()
 
     Box(
@@ -239,4 +237,10 @@ fun LoginUser(
             }
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name="Login Screen")
+@Composable
+fun LoginUserPreview(){
+    LoginUser()
 }

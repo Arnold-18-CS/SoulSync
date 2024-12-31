@@ -45,14 +45,12 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soulsync.R
 
-@Preview(showBackground = true, showSystemUi = true, name="Register Screen")
 @Composable
 fun RegisterUser(
     onNavigateToLogin: () -> Unit = {},
-    authViewModel: AuthViewModel = viewModel()
 ){
 
     val bgImage = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
@@ -64,6 +62,7 @@ fun RegisterUser(
     val appFont = FontFamily(Font(R.font.emilys_candy, FontWeight.Normal))
 
     // Observe the registration state using the authViewModel
+    val authViewModel: AuthViewModel = hiltViewModel()
     val registerState by authViewModel.registerState.collectAsState()
 
     Box(
@@ -261,4 +260,10 @@ fun RegisterUser(
             }
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name="Register Screen")
+@Composable
+fun RegisterUserPreview(){
+    RegisterUser()
 }
