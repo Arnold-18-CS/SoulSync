@@ -2,6 +2,7 @@ package com.example.soulsync.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -32,20 +33,34 @@ class AuthViewModel @Inject constructor(private val auth :FirebaseAuth) : ViewMo
     val loginState: StateFlow<LoginState> = _loginState
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private suspend fun signInWithFirebase(email: String, password: String): Result<Unit>{
+    private suspend fun signInWithFirebase(email: String, password: String): Result<Unit> {
         return suspendCancellableCoroutine { continuation ->
             auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener{task->
-                    if(task.isSuccessful){
+                .addOnSuccessListener {
+                    // Additional verification that user exists
+                    if (auth.currentUser != null) {
                         continuation.resume(Result.success(Unit), null)
-                    }else{
-                        val errorMessage = when(task.exception){
-                            is FirebaseAuthInvalidUserException -> "No account found with this email"
-                            is FirebaseAuthInvalidCredentialsException -> "Incorrect password"
-                            else -> "Login failed. Please try again"
-                        }
-                        continuation.resume(Result.failure(Exception(errorMessage)), null)
+                    } else {
+                        continuation.resume(
+                            Result.failure(Exception("Authentication failed")),
+                            null
+                        )
                     }
+                }
+                .addOnFailureListener { exception ->
+                    val errorMessage = when (exception) {
+                        is FirebaseAuthInvalidUserException -> "No account found with this email"
+                        is FirebaseAuthInvalidCredentialsException -> "Incorrect password"
+                        is FirebaseNetworkException -> "Network error. Please check your connection"
+                        else -> "Login failed: ${exception.message}"
+                    }
+                    continuation.resume(Result.failure(Exception(errorMessage)), null)
+                }
+                .addOnCanceledListener {
+                    continuation.resume(
+                        Result.failure(Exception("Login process was cancelled")),
+                        null
+                    )
                 }
         }
     }
@@ -53,11 +68,17 @@ class AuthViewModel @Inject constructor(private val auth :FirebaseAuth) : ViewMo
     // Run the login process as a coroutine using viewModelScope
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
-            // Set the login state to loading before the login process; notify UI that the process is starting
             _loginState.value = LoginState.Loading
             try {
-                signInWithFirebase(email, password)
-                _loginState.value = LoginState.Success
+                val result = signInWithFirebase(email, password)
+                result.fold(
+                    onSuccess = {
+                        _loginState.value = LoginState.Success
+                    },
+                    onFailure = { exception ->
+                        _loginState.value = LoginState.Error(exception.message ?: "Login failed")
+                    }
+                )
             } catch (e: Exception) {
                 _loginState.value = LoginState.Error(e.message ?: "Login failed")
             }
@@ -105,8 +126,15 @@ class AuthViewModel @Inject constructor(private val auth :FirebaseAuth) : ViewMo
         viewModelScope.launch {
             _registerState.value = RegisterState.Loading
             try {
-                registerUserWithFirebase(email, password)
-                _registerState.value = RegisterState.Success
+                val result = registerUserWithFirebase(email, password)
+                result.fold(
+                    onSuccess = {
+                        _registerState.value = RegisterState.Success
+                    },
+                    onFailure = { exception ->
+                        _registerState.value = RegisterState.Error(exception.message ?: "Registration failed")
+                    }
+                )
             }catch (e: Exception) {
                 RegisterState.Error(e.message ?: "Registration failed")
             }
