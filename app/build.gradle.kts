@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId = "com.example.soulsync"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -28,8 +28,11 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
+        }
+        getByName("debug") {
+            proguardFiles("proguard-rules.pro")
         }
     }
     compileOptions {
@@ -63,47 +66,40 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    implementation("androidx.compose:compose-bom:2024.12.01")
-    implementation("androidx.compose.material3:material3")
-    implementation ("androidx.compose.material:material-icons-extended")
-
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.material3)
+    implementation(libs.androidx.material.icons.extended)
 
     // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation(platform(libs.firebase.bom))
 
     // Add the dependency for the Firebase SDK for Google Analytics
-    implementation("com.google.firebase:firebase-analytics")
+    implementation(libs.firebase.analytics)
 
     // See https://firebase.google.com/docs/android/setup#available-libraries
-    implementation("com.google.firebase:firebase-auth")
-    //implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.firebase.auth)
+    // implementation("com.google.firebase:firebase-firestore")
 
-    implementation ("com.google.firebase:firebase-database")
+    implementation(libs.firebase.database)
 
-    //Room
-    val room_version = "2.6.1"
-
-    implementation("androidx.room:room-runtime:$room_version")
+    implementation(libs.androidx.room.runtime)
 
     // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
     // See Add the KSP plugin to your project
-    ksp("androidx.room:room-compiler:$room_version")
+    ksp(libs.androidx.room.compiler)
 
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation(libs.retrofit)
 // Retrofit with Scalar Converter
-    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation(libs.converter.scalars)
 
-    val nav_version = "2.8.5"
-
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation(libs.androidx.navigation.compose)
     // Testing Navigation
-    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+    androidTestImplementation(libs.androidx.navigation.testing)
 
-
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation(libs.hilt.android.v248)
+    kapt(libs.hilt.android.compiler.v248)
+    implementation(libs.androidx.hilt.navigation.compose)
 }

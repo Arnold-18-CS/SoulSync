@@ -34,6 +34,7 @@ import com.example.soulsync.ui.theme.EmailTextField
 import com.example.soulsync.ui.theme.PasswordTextField
 import com.example.soulsync.ui.theme.SSPrimaryButton
 
+@Suppress("ktlint:standard:function-naming")
 /**
  * LoginScreen allows users to navigate to login using email.
  * @param onNavigateToRegister Callback when the user does not have an account.
@@ -43,8 +44,7 @@ import com.example.soulsync.ui.theme.SSPrimaryButton
 fun LoginUser(
     onNavigateToRegister: () -> Unit = {},
     onNavigateToHome: () -> Unit = {},
-){
-
+) {
     // Fetching the background image and storing its alpha
     val bgImage = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
     val alpha = remember { 0.4f }
@@ -60,23 +60,24 @@ fun LoginUser(
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .paint(
-                painter = bgImage,
-                contentScale = ContentScale.FillBounds,
-                alpha = alpha
-                )
-    ){
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .paint(
+                    painter = bgImage,
+                    contentScale = ContentScale.FillBounds,
+                    alpha = alpha,
+                ),
+    ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             // Header text for the page
             Text(
                 text = "Sign In",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = MaterialTheme.typography.bodyLarge.fontFamily
+                fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
             )
 
             Spacer(modifier = Modifier.padding(10.dp))
@@ -88,7 +89,7 @@ fun LoginUser(
                 fontWeight = FontWeight.Bold,
                 color = AppColors.SSPrimaryPurple,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { onNavigateToRegister() }
+                modifier = Modifier.clickable { onNavigateToRegister() },
             )
 
             Spacer(modifier = Modifier.padding(15.dp))
@@ -97,7 +98,7 @@ fun LoginUser(
             EmailTextField(
                 text = email.value,
                 onTextChange = { email.value = it },
-                modifier = Modifier.size(width = 350.dp, height = 70.dp)
+                modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
             Spacer(modifier = Modifier.padding(12.dp))
@@ -108,7 +109,7 @@ fun LoginUser(
                 onPasswordChange = { password.value = it },
                 showPassword = showPassword,
                 onTogglePasswordVisibility = { showPassword = !showPassword },
-                modifier = Modifier.size(width = 350.dp, height = 70.dp)
+                modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
             Spacer(modifier = Modifier.padding(10.dp))
@@ -119,29 +120,29 @@ fun LoginUser(
                 fontWeight = FontWeight.Bold,
                 color = AppColors.SSPrimaryPurple,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { /*TODO*/ }
+                modifier = Modifier.clickable { /*TODO*/ },
             )
-            
+
             Spacer(modifier = Modifier.padding(20.dp))
 
             // Login button
             SSPrimaryButton(
                 text = "Sign In",
                 onClick = {
-                    if(email.value.isNotEmpty() && password.value.isNotEmpty()){
+                    if (email.value.isNotEmpty() && password.value.isNotEmpty()) {
                         authViewModel.loginUser(email.value, password.value)
-                    }else{
+                    } else {
                         authViewModel.setLoginError("!! Please fill in both fields !!")
                     }
                 },
                 isLoading = loginState is AuthViewModel.LoginState.Loading,
-                enabled = email.value.isNotEmpty() && password.value.isNotEmpty()
+                enabled = email.value.isNotEmpty() && password.value.isNotEmpty(),
             )
 
             Spacer(modifier = Modifier.padding(10.dp))
 
             // Handling different login states on UI
-            when(loginState){
+            when (loginState) {
                 // Show progress indicator if loading
                 is AuthViewModel.LoginState.Loading -> {
                     CircularProgressIndicator(modifier = Modifier.padding(16.dp))
@@ -153,7 +154,7 @@ fun LoginUser(
                         text = errorMessage,
                         color = Color.Red,
                         fontSize = 14.sp,
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 8.dp),
                     )
                 }
                 // Show green success message then reroute
@@ -162,7 +163,7 @@ fun LoginUser(
                         text = "Login successful! Redirecting...",
                         color = Color.Green,
                         fontSize = 14.sp,
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 8.dp),
                     )
                     onNavigateToHome()
                 }
@@ -172,9 +173,10 @@ fun LoginUser(
     }
 }
 
+@Suppress("ktlint:standard:function-naming")
 // Preview Function for login screen
-@Preview(showBackground = true, showSystemUi = true, name="Login Screen")
+@Preview(showBackground = true, showSystemUi = true, name = "Login Screen")
 @Composable
-fun LoginUserPreview(){
+fun LoginUserPreview() {
     LoginUser()
 }

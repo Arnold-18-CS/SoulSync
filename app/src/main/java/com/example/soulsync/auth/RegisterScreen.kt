@@ -36,18 +36,16 @@ import com.example.soulsync.ui.theme.EmailTextField
 import com.example.soulsync.ui.theme.PasswordTextField
 import com.example.soulsync.ui.theme.SSPrimaryButton
 
+@Suppress("ktlint:standard:function-naming")
 /**
  * RegisterScreen allows users to register using email.
  * @param onNavigateToLogin Callback if the user already has an account.
  */
 @Composable
-fun RegisterUser(
-    onNavigateToLogin: () -> Unit = {},
-){
+fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
     // Fetching the background image and storing its alpha
     val bgImage = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
     val alpha = remember { 0.4f }
-
 
     // Creating variables for user input
     var email = rememberSaveable { mutableStateOf("") }
@@ -61,26 +59,26 @@ fun RegisterUser(
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .paint(
-                painter = bgImage,
-                contentScale = ContentScale.FillBounds,
-                alpha = alpha
-            )
-    ){
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .paint(
+                    painter = bgImage,
+                    contentScale = ContentScale.FillBounds,
+                    alpha = alpha,
+                ),
+    ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-
             // Header for screen
             Text(
                 text = "Sign Up",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
-                modifier = Modifier.padding(15.dp)
-                )
+                modifier = Modifier.padding(15.dp),
+            )
 
             Spacer(modifier = Modifier.padding(8.dp))
 
@@ -88,7 +86,7 @@ fun RegisterUser(
             EmailTextField(
                 text = email.value,
                 onTextChange = { email.value = it },
-                modifier = Modifier.size(width = 350.dp, height = 70.dp)
+                modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
             Spacer(modifier = Modifier.padding(12.dp))
@@ -99,7 +97,7 @@ fun RegisterUser(
                 onPasswordChange = { password.value = it },
                 showPassword = showPassword,
                 onTogglePasswordVisibility = { showPassword = !showPassword },
-                modifier = Modifier.size(width = 350.dp, height = 70.dp)
+                modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
             Spacer(modifier = Modifier.padding(12.dp))
@@ -111,7 +109,7 @@ fun RegisterUser(
                 showPassword = showPassword,
                 onTogglePasswordVisibility = { showPassword = !showPassword },
                 label = "Confirm Password",
-                modifier = Modifier.size(width = 350.dp, height = 70.dp)
+                modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
             Spacer(modifier = Modifier.padding(10.dp))
@@ -123,7 +121,7 @@ fun RegisterUser(
                 fontWeight = FontWeight.Bold,
                 color = AppColors.SSPrimaryPurple,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { onNavigateToLogin() }
+                modifier = Modifier.clickable { onNavigateToLogin() },
             )
 
             Spacer(modifier = Modifier.padding(20.dp))
@@ -132,21 +130,21 @@ fun RegisterUser(
             SSPrimaryButton(
                 text = "Sign up",
                 onClick = {
-                    if(email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty()){
+                    if (email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty()) {
                         authViewModel.registerUser(email.value, password.value)
-                    }else{
+                    } else {
                         authViewModel.setLoginError("!! Please fill in all fields !!")
                     }
                 },
                 isLoading = registerState is AuthViewModel.RegisterState.Loading,
                 enabled = email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty(),
-                modifier = Modifier.size(width = 350.dp, height = 70.dp)
+                modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
             Spacer(modifier = Modifier.padding(10.dp))
 
             // Display the registration state using the authViewModel
-            when (registerState){
+            when (registerState) {
                 is AuthViewModel.RegisterState.Loading -> {
                     CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                 }
@@ -157,7 +155,7 @@ fun RegisterUser(
                         text = errorMessage,
                         color = Color.Red,
                         fontSize = 14.sp,
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 8.dp),
                     )
                     LaunchedEffect(Unit) {
                         kotlinx.coroutines.delay(2000)
@@ -170,7 +168,7 @@ fun RegisterUser(
                         text = "Registration successful! Redirecting...",
                         color = Color.Green,
                         fontSize = 14.sp,
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 8.dp),
                     )
                     onNavigateToLogin()
                 }
@@ -181,9 +179,10 @@ fun RegisterUser(
     }
 }
 
+@Suppress("ktlint:standard:function-naming")
 // Preview Function for register screen
-@Preview(showBackground = true, showSystemUi = true, name="Register Screen")
+@Preview(showBackground = true, showSystemUi = true, name = "Register Screen")
 @Composable
-fun RegisterUserPreview(){
+fun RegisterUserPreview() {
     RegisterUser()
 }

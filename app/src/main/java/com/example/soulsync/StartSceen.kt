@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.soulsync.ui.theme.SSPrimaryButton
 import com.example.soulsync.ui.theme.SSSecondaryButton
 
+@Suppress("ktlint:standard:function-naming")
 /**
  * StartScreen allows users to navigate to Login or Register screens.
  * @param onNavigateToLogin Callback when the "Sign In" button is pressed.
@@ -32,9 +33,9 @@ import com.example.soulsync.ui.theme.SSSecondaryButton
 
 @Composable
 fun StartScreen(
-    onNavigateToLogin: () -> Unit = remember{ {} },
-    onNavigateToRegister: () -> Unit = remember { {} }
-){
+    onNavigateToLogin: () -> Unit = {},
+    onNavigateToRegister: () -> Unit = {},
+) {
     // Fetching the background and logo images
     val bgImage = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
     val logoImage = painterResource(id = R.drawable.soul_sync_logo)
@@ -48,17 +49,18 @@ fun StartScreen(
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .paint(
-                painter = bgImage,
-                contentScale = ContentScale.FillBounds,
-                alpha = alpha
-            )
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .paint(
+                    painter = bgImage,
+                    contentScale = ContentScale.FillBounds,
+                    alpha = alpha,
+                ),
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             Text(
                 text = "Let's",
                 fontSize = 30.sp,
@@ -71,43 +73,47 @@ fun StartScreen(
                 painter = logoImage,
                 contentDescription = "SoulSync Logo",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(width = 400.dp, height = 300.dp)
-                    .padding(start = 20.dp)
-                    .graphicsLayer { this.rotationZ = rotationAngle }
+                modifier =
+                    Modifier
+                        .size(width = 400.dp, height = 300.dp)
+                        .padding(start = 20.dp)
+                        .graphicsLayer { this.rotationZ = rotationAngle },
             )
 
             // Use a lazy row to load buttons
-            LazyRow (
+            LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 content = {
-                    item{
+                    item {
                         // Sign In Button
                         SSPrimaryButton(
                             text = "Sign In",
                             onClick = { onNavigateToLogin() },
-                            modifier = Modifier
-                                .size(width = 150.dp, height = 70.dp)
+                            modifier =
+                                Modifier
+                                    .size(width = 150.dp, height = 70.dp),
                         )
                     }
-                    item{
+                    item {
                         // Sign Up Button
                         SSSecondaryButton(
                             text = "Sign Up",
                             onClick = { onNavigateToRegister() },
-                            modifier = Modifier
-                                .size(width = 150.dp, height = 70.dp)
+                            modifier =
+                                Modifier
+                                    .size(width = 150.dp, height = 70.dp),
                         )
                     }
-                }
+                },
             )
         }
     }
 }
 
+@Suppress("ktlint:standard:function-naming")
 // Preview for the start screen
-@Preview(showBackground = true, showSystemUi = true, name="Start Screen")
+@Preview(showBackground = true, showSystemUi = true, name = "Start Screen")
 @Composable
-fun StartScreenPreview(){
+fun StartScreenPreview() {
     StartScreen()
 }

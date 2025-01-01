@@ -39,8 +39,8 @@ SoulSync is a personalized app for couples to share their love and memories. It 
 - This is the figma design link for the vision I had at the start: [Figma Design](https://www.figma.com/community/file/1454571861620169675)
 
 
-| Home Page | Quotes Page | Memories Page |
-|-----------|-------------|---------------|
+| Home Page                                     | Quotes Page                                     | Memories Page                                     |
+|-----------------------------------------------|-------------------------------------------------|---------------------------------------------------|
 | ![Home Page](https://via.placeholder.com/200) | ![Quotes Page](https://via.placeholder.com/200) | ![Memories Page](https://via.placeholder.com/200) |
 
 ---

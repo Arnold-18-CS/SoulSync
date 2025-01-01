@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:filename")
+
 package com.example.soulsync.auth
 
 import com.google.firebase.auth.FirebaseAuth
@@ -10,8 +12,5 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 object FirebaseModule {
     @Provides
-    fun provideFirebaseAuth(): FirebaseAuth {
-        return FirebaseAuth.getInstance()
-    }
-
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 }
