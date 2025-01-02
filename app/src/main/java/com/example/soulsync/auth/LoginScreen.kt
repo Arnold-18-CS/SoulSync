@@ -17,14 +17,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.soulsync.R
 import com.example.soulsync.ui.theme.AppColors
 import com.example.soulsync.ui.theme.BackgroundImage
 import com.example.soulsync.ui.theme.EmailTextField
@@ -42,10 +40,6 @@ fun LoginUser(
     onNavigateToRegister: () -> Unit = {},
     onNavigateToHome: () -> Unit = {},
 ) {
-    // Fetching the background image and storing its alpha
-    painterResource(id = R.drawable.app_background)
-    remember { 0.4f }
-
     // Initializing variables for user input
     var email = remember { mutableStateOf("") }
     var password = remember { mutableStateOf("") }

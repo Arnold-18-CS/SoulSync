@@ -87,7 +87,7 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                 modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             PasswordTextField(
                 password = confirmPassword.value,
@@ -98,7 +98,7 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                 modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Text(
                 text = "Already have an account? Click here",
@@ -113,7 +113,7 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                     ) { onNavigateToLogin() },
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             SSPrimaryButton(
                 text = "Sign Up",

@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -39,8 +40,8 @@ fun EmailTextField(
     OutlinedTextField(
         value = text,
         onValueChange = onTextChange,
-        label = { Text(label) },
-        placeholder = { Text(placeholder, color = Color(AppColors.SSGray.value)) },
+        label = { Text(text = label, fontFamily = FontFamily.Default) },
+        placeholder = { Text(placeholder, fontFamily = FontFamily.Default, color = Color(AppColors.SSGray.value)) },
         singleLine = true,
         colors =
             OutlinedTextFieldDefaults.colors(
@@ -87,7 +88,7 @@ fun PasswordTextField(
     OutlinedTextField(
         value = password,
         onValueChange = onPasswordChange,
-        label = { Text(label) },
+        label = { Text(text = label, fontFamily = FontFamily.Default) },
         placeholder = { Text(placeholder, color = Color(AppColors.SSGray.value)) },
         singleLine = true,
         colors =
@@ -168,6 +169,7 @@ fun SSPrimaryButton(
                 text = text,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Default,
             )
         }
     }
@@ -211,6 +213,7 @@ fun SSSecondaryButton(
                 text = text,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Default,
             )
         }
     }
