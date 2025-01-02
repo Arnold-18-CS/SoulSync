@@ -37,6 +37,7 @@ import com.example.soulsync.R
 import com.example.soulsync.ui.theme.AppColors
 import com.example.soulsync.ui.theme.EmailTextField
 import com.example.soulsync.ui.theme.PasswordTextField
+import com.example.soulsync.ui.theme.SSPrimaryButton
 
 @Suppress("ktlint:standard:function-naming")
 /**
@@ -126,6 +127,22 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
             )
 
             Spacer(modifier = Modifier.height(10.dp))
+
+            SSPrimaryButton(
+                text = "Sign Up",
+                onClick = {
+                    if (email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty()) {
+                        if (password.value == confirmPassword.value) {
+                            authViewModel.registerUser(email.value, password.value)
+                        } else {
+                            authViewModel.setRegisterState(message = "Passwords do not match")
+                        }
+                    }
+                },
+                isLoading = registerState is AuthViewModel.RegisterState.Loading,
+                enabled = email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty(),
+                modifier = Modifier.size(width = 350.dp, height = 70.dp),
+            )
 
             // Display the registration state using the authViewModel
             when (registerState) {
