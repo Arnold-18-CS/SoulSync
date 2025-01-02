@@ -173,4 +173,8 @@ class AuthViewModel
         fun setRegisterState(message: String) {
             _registerState.value = RegisterState.Error(message)
         }
+
+        fun logout() {
+            FirebaseAuth.getInstance().signOut()
+        }
     }

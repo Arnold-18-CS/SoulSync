@@ -5,10 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.soulsync.SplashScreen
 import com.example.soulsync.StartScreen
-import com.example.soulsync.auth.AppHome
 import com.example.soulsync.auth.LoginUser
 import com.example.soulsync.auth.RegisterUser
+import com.example.soulsync.ui.home.AppHome
 
 private const val TAG = "NavigationGraph"
 
@@ -17,8 +18,13 @@ private const val TAG = "NavigationGraph"
 fun NavigationGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = AppDestinations.StartScreen.route,
+        startDestination = AppDestinations.MainSplashScreen.route,
     ) {
+        composable(route = AppDestinations.MainSplashScreen.route) {
+            Log.d(TAG, "Navigated to: SplashScreen")
+            SplashScreen(navController = navController)
+        }
+
         composable(route = AppDestinations.StartScreen.route) {
             Log.d(TAG, "Navigated to: StartScreen")
             StartScreen(
@@ -52,7 +58,9 @@ fun NavigationGraph(navController: NavHostController) {
                 },
                 onNavigateToHome = {
                     Log.d(TAG, "Navigated to: HomeScreen, from LoginScreen")
-                    navController.navigate(AppDestinations.HomeScreen.route)
+                    navController.navigate(AppDestinations.HomeScreen.route) {
+                        popUpTo(AppDestinations.LoginScreen.route) { inclusive = true }
+                    }
                 },
             )
         }
