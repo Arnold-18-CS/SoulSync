@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,15 +36,14 @@ fun StartScreen(
     onNavigateToRegister: () -> Unit = {},
 ) {
     // Fetching the background and logo images
-    val bgImage = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
-    val logoImage = painterResource(id = R.drawable.soul_sync_logo)
+    val bgImage = painterResource(id = R.drawable.app_background)
+    val logoImage = painterResource(id = R.drawable.app_logo)
 
     // Fetching app font and storing
 //    val appFont = FontFamily(Font(R.font.emilys_candy, FontWeight.Normal))
 
     // Storing alpha and rotation for images by remember
     val alpha = remember { 0.4f }
-    val rotationAngle = remember { 2f }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -76,8 +74,7 @@ fun StartScreen(
                 modifier =
                     Modifier
                         .size(width = 400.dp, height = 300.dp)
-                        .padding(start = 20.dp)
-                        .graphicsLayer { this.rotationZ = rotationAngle },
+                        .padding(start = 20.dp),
             )
 
             // Use a lazy row to load buttons

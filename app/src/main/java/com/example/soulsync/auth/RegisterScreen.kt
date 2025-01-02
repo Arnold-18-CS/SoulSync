@@ -1,10 +1,13 @@
 package com.example.soulsync.auth
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,7 +37,6 @@ import com.example.soulsync.R
 import com.example.soulsync.ui.theme.AppColors
 import com.example.soulsync.ui.theme.EmailTextField
 import com.example.soulsync.ui.theme.PasswordTextField
-import com.example.soulsync.ui.theme.SSPrimaryButton
 
 @Suppress("ktlint:standard:function-naming")
 /**
@@ -44,7 +46,7 @@ import com.example.soulsync.ui.theme.SSPrimaryButton
 @Composable
 fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
     // Fetching the background image and storing its alpha
-    val bgImage = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
+    val bgImage = painterResource(id = R.drawable.app_background)
     val alpha = remember { 0.4f }
 
     // Creating variables for user input
@@ -77,21 +79,18 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
-                modifier = Modifier.padding(15.dp),
             )
 
-            Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Input field for email
             EmailTextField(
                 text = email.value,
                 onTextChange = { email.value = it },
                 modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
-            Spacer(modifier = Modifier.padding(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Input field for user password
             PasswordTextField(
                 password = password.value,
                 onPasswordChange = { password.value = it },
@@ -100,9 +99,8 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                 modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
-            Spacer(modifier = Modifier.padding(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Input field for confirm password
             PasswordTextField(
                 password = confirmPassword.value,
                 onPasswordChange = { confirmPassword.value = it },
@@ -112,36 +110,22 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                 modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
-            Spacer(modifier = Modifier.padding(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Clickable link to reroute to login page if user has an account
             Text(
                 text = "Already have an account? Click here",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = AppColors.SSPrimaryPurple,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { onNavigateToLogin() },
+                modifier =
+                    Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = LocalIndication.current,
+                    ) { onNavigateToLogin() },
             )
 
-            Spacer(modifier = Modifier.padding(20.dp))
-
-            // Register button
-            SSPrimaryButton(
-                text = "Sign up",
-                onClick = {
-                    if (email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty()) {
-                        authViewModel.registerUser(email.value, password.value)
-                    } else {
-                        authViewModel.setLoginError("!! Please fill in all fields !!")
-                    }
-                },
-                isLoading = registerState is AuthViewModel.RegisterState.Loading,
-                enabled = email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty(),
-                modifier = Modifier.size(width = 350.dp, height = 70.dp),
-            )
-
-            Spacer(modifier = Modifier.padding(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             // Display the registration state using the authViewModel
             when (registerState) {

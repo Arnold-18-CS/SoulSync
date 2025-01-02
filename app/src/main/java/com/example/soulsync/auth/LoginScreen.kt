@@ -46,7 +46,7 @@ fun LoginUser(
     onNavigateToHome: () -> Unit = {},
 ) {
     // Fetching the background image and storing its alpha
-    val bgImage = painterResource(id = R.drawable.wallpaper_in_purple_aesthetic)
+    val bgImage = painterResource(id = R.drawable.app_background)
     val alpha = remember { 0.4f }
 
     // Initializing variables for user input
