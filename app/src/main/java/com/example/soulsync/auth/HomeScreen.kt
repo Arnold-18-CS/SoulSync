@@ -2,6 +2,7 @@ package com.example.soulsync.auth
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.example.soulsync.ui.theme.BackgroundImage
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
@@ -10,5 +11,7 @@ fun AppHome(
     onNavigateToRegister: () -> Unit = {},
     onNavigateToStart: () -> Unit = {},
 ) {
-    Text(text = "Home Screen")
+    BackgroundImage.Background {
+        Text(text = "Home Screen")
+    }
 }

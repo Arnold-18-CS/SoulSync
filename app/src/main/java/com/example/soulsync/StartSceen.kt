@@ -2,24 +2,25 @@ package com.example.soulsync
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.soulsync.ui.theme.BackgroundImage
 import com.example.soulsync.ui.theme.SSPrimaryButton
 import com.example.soulsync.ui.theme.SSSecondaryButton
 
@@ -36,26 +37,16 @@ fun StartScreen(
     onNavigateToRegister: () -> Unit = {},
 ) {
     // Fetching the background and logo images
-    val bgImage = painterResource(id = R.drawable.app_background)
+    painterResource(id = R.drawable.app_background)
     val logoImage = painterResource(id = R.drawable.app_logo)
 
     // Fetching app font and storing
-//    val appFont = FontFamily(Font(R.font.emilys_candy, FontWeight.Normal))
+    FontFamily(Font(R.font.emilys_candy, FontWeight.Normal))
 
     // Storing alpha and rotation for images by remember
-    val alpha = remember { 0.4f }
+    remember { 0.4f }
 
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .paint(
-                    painter = bgImage,
-                    contentScale = ContentScale.FillBounds,
-                    alpha = alpha,
-                ),
-    ) {
+    BackgroundImage.Background {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -63,7 +54,7 @@ fun StartScreen(
                 text = "Let's",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-//                fontFamily = MaterialTheme.typography.displayLarge.fontFamily
+                fontFamily = MaterialTheme.typography.displayLarge.fontFamily,
             )
 
             // Load application logo at an angle

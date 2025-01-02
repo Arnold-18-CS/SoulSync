@@ -3,10 +3,8 @@ package com.example.soulsync.auth
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,9 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -35,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soulsync.R
 import com.example.soulsync.ui.theme.AppColors
+import com.example.soulsync.ui.theme.BackgroundImage
 import com.example.soulsync.ui.theme.EmailTextField
 import com.example.soulsync.ui.theme.PasswordTextField
 import com.example.soulsync.ui.theme.SSPrimaryButton
@@ -47,8 +44,8 @@ import com.example.soulsync.ui.theme.SSPrimaryButton
 @Composable
 fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
     // Fetching the background image and storing its alpha
-    val bgImage = painterResource(id = R.drawable.app_background)
-    val alpha = remember { 0.4f }
+    painterResource(id = R.drawable.app_background)
+    remember { 0.4f }
 
     // Creating variables for user input
     var email = rememberSaveable { mutableStateOf("") }
@@ -60,17 +57,7 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
     val authViewModel: AuthViewModel = hiltViewModel()
     val registerState by authViewModel.registerState.collectAsState()
 
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .paint(
-                    painter = bgImage,
-                    contentScale = ContentScale.FillBounds,
-                    alpha = alpha,
-                ),
-    ) {
+    BackgroundImage.Background {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
