@@ -1,5 +1,6 @@
 package com.example.soulsync.auth
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +32,8 @@ import com.example.soulsync.ui.theme.EmailTextField
 import com.example.soulsync.ui.theme.PasswordTextField
 import com.example.soulsync.ui.theme.SSPrimaryButton
 
+private const val TAG = "LoginScreen"
+
 @Suppress("ktlint:standard:function-naming")
 /**
  * LoginScreen allows users to navigate to login using email.
@@ -40,6 +45,18 @@ fun LoginUser(
     onNavigateToRegister: () -> Unit = {},
     onNavigateToHome: () -> Unit = {},
 ) {
+    // Logging on screen entry
+    LaunchedEffect(Unit) {
+        Log.d(TAG, "Login Screen Entered")
+    }
+
+    // Logging on screen exit
+    DisposableEffect(Unit) {
+        onDispose {
+            Log.d(TAG, "Login screen exited")
+        }
+    }
+
     // Initializing variables for user input
     var email = remember { mutableStateOf("") }
     var password = remember { mutableStateOf("") }
@@ -70,7 +87,11 @@ fun LoginUser(
                 fontWeight = FontWeight.Bold,
                 color = AppColors.SSPrimaryPurple,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { onNavigateToRegister() },
+                modifier =
+                    Modifier.clickable {
+                        Log.d(TAG, "Navigate to Register, from Login")
+                        onNavigateToRegister()
+                    },
             )
 
             Spacer(modifier = Modifier.padding(15.dp))
@@ -78,7 +99,10 @@ fun LoginUser(
             // Email text field
             EmailTextField(
                 text = email.value,
-                onTextChange = { email.value = it },
+                onTextChange = {
+                    email.value = it
+                    Log.v(TAG, "Email updated")
+                },
                 modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
@@ -87,7 +111,10 @@ fun LoginUser(
             // Password entry field
             PasswordTextField(
                 password = password.value,
-                onPasswordChange = { password.value = it },
+                onPasswordChange = {
+                    password.value = it
+                    Log.v(TAG, "Password updated")
+                },
                 showPassword = showPassword,
                 onTogglePasswordVisibility = { showPassword = !showPassword },
                 modifier = Modifier.size(width = 350.dp, height = 70.dp),
@@ -110,10 +137,14 @@ fun LoginUser(
             SSPrimaryButton(
                 text = "Sign In",
                 onClick = {
+                    Log.v(TAG, "Login button pressed")
                     if (email.value.isNotEmpty() && password.value.isNotEmpty()) {
+                        Log.v(TAG, "Login in process started")
                         authViewModel.loginUser(email.value, password.value)
+                        Log.i(TAG, "Login in process successful")
                     } else {
                         authViewModel.setLoginError("!! Please fill in both fields !!")
+                        Log.w(TAG, "Displaying validation error \"Please fill in both fields\"")
                     }
                 },
                 isLoading = loginState is AuthViewModel.LoginState.Loading,
@@ -131,6 +162,7 @@ fun LoginUser(
                 // Show red error message if login fails
                 is AuthViewModel.LoginState.Error -> {
                     val errorMessage = (loginState as AuthViewModel.LoginState.Error).message
+                    Log.e(TAG, "Login failed: $errorMessage")
                     Text(
                         text = errorMessage,
                         color = Color.Red,
@@ -140,12 +172,14 @@ fun LoginUser(
                 }
                 // Show green success message then reroute
                 is AuthViewModel.LoginState.Success -> {
+                    Log.i(TAG, "Login successful")
                     Text(
                         text = "Login successful! Redirecting...",
                         color = Color.Green,
                         fontSize = 14.sp,
                         modifier = Modifier.padding(top = 8.dp),
                     )
+                    Log.d(TAG, "Navigating to Home, from Login")
                     onNavigateToHome()
                 }
                 else -> Unit

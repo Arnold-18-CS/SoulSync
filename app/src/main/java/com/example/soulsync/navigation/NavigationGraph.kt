@@ -1,5 +1,6 @@
 package com.example.soulsync.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -9,6 +10,8 @@ import com.example.soulsync.auth.AppHome
 import com.example.soulsync.auth.LoginUser
 import com.example.soulsync.auth.RegisterUser
 
+private const val TAG = "NavigationGraph"
+
 @Suppress("ktlint:standard:function-naming")
 @Composable
 fun NavigationGraph(navController: NavHostController) {
@@ -17,30 +20,58 @@ fun NavigationGraph(navController: NavHostController) {
         startDestination = AppDestinations.StartScreen.route,
     ) {
         composable(route = AppDestinations.StartScreen.route) {
+            Log.d(TAG, "Navigated to: StartScreen")
             StartScreen(
-                onNavigateToLogin = { navController.navigate(AppDestinations.LoginScreen.route) },
-                onNavigateToRegister = { navController.navigate(AppDestinations.RegisterScreen.route) },
+                onNavigateToLogin = {
+                    Log.d(TAG, "Navigated to: LoginScreen, from StartScreen")
+                    navController.navigate(AppDestinations.LoginScreen.route)
+                },
+                onNavigateToRegister = {
+                    Log.d(TAG, "Navigated to: RegisterScreen, from StartScreen")
+                    navController.navigate(AppDestinations.RegisterScreen.route)
+                },
             )
         }
 
         composable(AppDestinations.RegisterScreen.route) {
+            Log.d(TAG, "Navigated to: RegisterScreen")
             RegisterUser(
-                onNavigateToLogin = { navController.navigate(AppDestinations.LoginScreen.route) },
+                onNavigateToLogin = {
+                    Log.d(TAG, "Navigated to: LoginScreen, from RegisterScreen")
+                    navController.navigate(AppDestinations.LoginScreen.route)
+                },
             )
         }
 
         composable(AppDestinations.LoginScreen.route) {
+            Log.d(TAG, "Navigated to: LoginScreen")
             LoginUser(
-                onNavigateToRegister = { navController.navigate(AppDestinations.RegisterScreen.route) },
-                onNavigateToHome = { navController.navigate(AppDestinations.HomeScreen.route) },
+                onNavigateToRegister = {
+                    Log.d(TAG, "Navigated to: RegisterScreen, from LoginScreen")
+                    navController.navigate(AppDestinations.RegisterScreen.route)
+                },
+                onNavigateToHome = {
+                    Log.d(TAG, "Navigated to: HomeScreen, from LoginScreen")
+                    navController.navigate(AppDestinations.HomeScreen.route)
+                },
             )
         }
 
         composable(AppDestinations.HomeScreen.route) {
+            Log.d(TAG, "Navigated to: HomeScreen")
             AppHome(
-                onNavigateToLogin = { navController.navigate(AppDestinations.LoginScreen.route) },
-                onNavigateToRegister = { navController.navigate(AppDestinations.RegisterScreen.route) },
-                onNavigateToStart = { navController.navigate(AppDestinations.StartScreen.route) },
+                onNavigateToLogin = {
+                    Log.d(TAG, "Navigated to: LoginScreen, from HomeScreen")
+                    navController.navigate(AppDestinations.LoginScreen.route)
+                },
+                onNavigateToRegister = {
+                    Log.d(TAG, "Navigated to: RegisterScreen, from HomeScreen")
+                    navController.navigate(AppDestinations.RegisterScreen.route)
+                },
+                onNavigateToStart = {
+                    Log.d(TAG, "Navigated to: StartScreen, from HomeScreen")
+                    navController.navigate(AppDestinations.StartScreen.route)
+                },
             )
         }
     }

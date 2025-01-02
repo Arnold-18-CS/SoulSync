@@ -16,7 +16,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 
-// Manage login and registration logic using Firebase Authentication
+/**
+ * AuthViewModel handles the authentication process.
+ * Defines functions to login and register users using Firebase by implementing coroutines for efficiency
+ */
 @HiltViewModel
 class AuthViewModel
     @Inject

@@ -1,5 +1,6 @@
 package com.example.soulsync.auth
 
+import android.util.Log
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -12,6 +13,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,19 +24,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.soulsync.R
 import com.example.soulsync.ui.theme.AppColors
 import com.example.soulsync.ui.theme.BackgroundImage
 import com.example.soulsync.ui.theme.EmailTextField
 import com.example.soulsync.ui.theme.PasswordTextField
 import com.example.soulsync.ui.theme.SSPrimaryButton
+
+private const val TAG = "RegisterScreen"
 
 @Suppress("ktlint:standard:function-naming")
 /**
@@ -43,9 +45,17 @@ import com.example.soulsync.ui.theme.SSPrimaryButton
  */
 @Composable
 fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
-    // Fetching the background image and storing its alpha
-    painterResource(id = R.drawable.app_background)
-    remember { 0.4f }
+    // Logging on screen entry
+    LaunchedEffect(Unit) {
+        Log.d(TAG, "Register Screen Entered")
+    }
+
+    // Logging on screen exit
+    DisposableEffect(Unit) {
+        onDispose {
+            Log.d(TAG, "Register screen exited")
+        }
+    }
 
     // Creating variables for user input
     var email = rememberSaveable { mutableStateOf("") }
@@ -73,7 +83,10 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
 
             EmailTextField(
                 text = email.value,
-                onTextChange = { email.value = it },
+                onTextChange = {
+                    email.value = it
+                    Log.v(TAG, "Email updated")
+                },
                 modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
@@ -81,9 +94,15 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
 
             PasswordTextField(
                 password = password.value,
-                onPasswordChange = { password.value = it },
+                onPasswordChange = {
+                    password.value = it
+                    Log.v(TAG, "Password updated")
+                },
                 showPassword = showPassword,
-                onTogglePasswordVisibility = { showPassword = !showPassword },
+                onTogglePasswordVisibility = {
+                    showPassword = !showPassword
+                    Log.v(TAG, "Password visibility updated")
+                },
                 modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
 
@@ -91,9 +110,15 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
 
             PasswordTextField(
                 password = confirmPassword.value,
-                onPasswordChange = { confirmPassword.value = it },
+                onPasswordChange = {
+                    confirmPassword.value = it
+                    Log.v(TAG, "Confirm Password updated")
+                },
                 showPassword = showPassword,
-                onTogglePasswordVisibility = { showPassword = !showPassword },
+                onTogglePasswordVisibility = {
+                    showPassword = !showPassword
+                    Log.v(TAG, "Confirm Password visibility updated")
+                },
                 label = "Confirm Password",
                 modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
@@ -110,7 +135,10 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                     Modifier.clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = LocalIndication.current,
-                    ) { onNavigateToLogin() },
+                    ) {
+                        Log.v(TAG, "Navigate to Login, from Register")
+                        onNavigateToLogin()
+                    },
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -119,11 +147,18 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                 text = "Sign Up",
                 onClick = {
                     if (email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty()) {
+                        Log.v(TAG, "Register button pressed, all values filled")
                         if (password.value == confirmPassword.value) {
+                            Log.v(TAG, "Passwords match, login in process started")
                             authViewModel.registerUser(email.value, password.value)
+                            Log.i(TAG, "Login in process successful")
                         } else {
                             authViewModel.setRegisterState(message = "Passwords do not match")
+                            Log.w(TAG, "Displaying validation error \"Passwords do not match\"")
                         }
+                    } else {
+                        authViewModel.setRegisterState(message = "Please fill in all fields")
+                        Log.w(TAG, "Displaying validation error \"Please fill in all fields\"")
                     }
                 },
                 isLoading = registerState is AuthViewModel.RegisterState.Loading,
@@ -139,6 +174,7 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                 // Runs on Failure to Register
                 is AuthViewModel.RegisterState.Error -> {
                     val errorMessage = (registerState as AuthViewModel.RegisterState.Error).message
+                    Log.e(TAG, "Registration failed: $errorMessage")
                     Text(
                         text = errorMessage,
                         color = Color.Red,
@@ -152,12 +188,14 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                 }
                 // Run on Successful Registration
                 is AuthViewModel.RegisterState.Success -> {
+                    Log.i(TAG, "Registration successful")
                     Text(
                         text = "Registration successful! Redirecting...",
                         color = Color.Green,
                         fontSize = 14.sp,
                         modifier = Modifier.padding(top = 8.dp),
                     )
+                    Log.d(TAG, "Navigating to Login, from Register")
                     onNavigateToLogin()
                 }
 

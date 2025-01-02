@@ -1,5 +1,6 @@
 package com.example.soulsync
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -20,6 +23,8 @@ import androidx.compose.ui.unit.sp
 import com.example.soulsync.ui.theme.BackgroundImage
 import com.example.soulsync.ui.theme.SSPrimaryButton
 import com.example.soulsync.ui.theme.SSSecondaryButton
+
+private const val TAG = "StartScreen"
 
 @Suppress("ktlint:standard:function-naming")
 /**
@@ -33,6 +38,17 @@ fun StartScreen(
     onNavigateToLogin: () -> Unit = {},
     onNavigateToRegister: () -> Unit = {},
 ) {
+    // Logging on screen entry
+    LaunchedEffect(Unit) {
+        Log.d(TAG, "Start Screen Entered")
+    }
+
+    // Logging on screen exit
+    DisposableEffect(Unit) {
+        onDispose {
+            Log.d(TAG, "Start screen exited")
+        }
+    }
     // Fetching the logo image
     val logoImage = painterResource(id = R.drawable.app_logo)
 
@@ -67,7 +83,10 @@ fun StartScreen(
                         // Sign In Button
                         SSPrimaryButton(
                             text = "Sign In",
-                            onClick = { onNavigateToLogin() },
+                            onClick = {
+                                Log.v(TAG, "Sign In button pressed")
+                                onNavigateToLogin()
+                            },
                             modifier =
                                 Modifier
                                     .size(width = 150.dp, height = 70.dp),
@@ -77,7 +96,10 @@ fun StartScreen(
                         // Sign Up Button
                         SSSecondaryButton(
                             text = "Sign Up",
-                            onClick = { onNavigateToRegister() },
+                            onClick = {
+                                Log.v(TAG, "Sign Up button pressed")
+                                onNavigateToRegister()
+                            },
                             modifier =
                                 Modifier
                                     .size(width = 150.dp, height = 70.dp),
