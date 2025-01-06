@@ -12,10 +12,14 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -25,6 +29,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.soulsync.navigation.HomeDestinations
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
@@ -214,6 +221,55 @@ fun SSSecondaryButton(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Default,
+            )
+        }
+    }
+}
+
+@Suppress("ktlint:standard:function-naming")
+@Composable
+fun SSNavigationBar(
+    navController: NavHostController,
+    state: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val screens =
+        listOf(
+            HomeDestinations.Home,
+            HomeDestinations.Quotes,
+            HomeDestinations.Memories,
+            HomeDestinations.Outbox,
+        )
+
+    NavigationBar(
+        modifier = modifier,
+        containerColor = AppColors.SSSecondaryPurple,
+    ) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+
+        screens.forEach { screen ->
+            NavigationBarItem(
+                label = { Text(text = screen.title!!) },
+                icon = {
+                    Icon(imageVector = screen.icon!!, contentDescription = screen.title)
+                },
+                selected = currentRoute == screen.route,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                colors =
+                    NavigationBarItemDefaults.colors(
+                        unselectedIconColor = AppColors.SSBlack,
+                        selectedIconColor = AppColors.SSBlack,
+                        selectedTextColor = AppColors.SSBlack,
+                        unselectedTextColor = AppColors.SSBlack,
+                        indicatorColor = AppColors.SSPrimaryPurple,
+                    ),
             )
         }
     }

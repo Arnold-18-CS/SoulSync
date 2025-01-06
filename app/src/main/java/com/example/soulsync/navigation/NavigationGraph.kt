@@ -15,17 +15,22 @@ private const val TAG = "NavigationGraph"
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun NavigationGraph(navController: NavHostController) {
+fun NavigationGraph(
+    navController: NavHostController,
+    isBottomBarVisible: (Boolean) -> Unit,
+) {
     NavHost(
         navController = navController,
         startDestination = AppDestinations.MainSplashScreen.route,
     ) {
         composable(route = AppDestinations.MainSplashScreen.route) {
+            isBottomBarVisible(false)
             Log.d(TAG, "Navigated to: SplashScreen")
             SplashScreen(navController = navController)
         }
 
         composable(route = AppDestinations.StartScreen.route) {
+            isBottomBarVisible(false)
             Log.d(TAG, "Navigated to: StartScreen")
             StartScreen(
                 onNavigateToLogin = {
@@ -40,6 +45,7 @@ fun NavigationGraph(navController: NavHostController) {
         }
 
         composable(AppDestinations.RegisterScreen.route) {
+            isBottomBarVisible(false)
             Log.d(TAG, "Navigated to: RegisterScreen")
             RegisterUser(
                 onNavigateToLogin = {
@@ -50,6 +56,7 @@ fun NavigationGraph(navController: NavHostController) {
         }
 
         composable(AppDestinations.LoginScreen.route) {
+            isBottomBarVisible(false)
             Log.d(TAG, "Navigated to: LoginScreen")
             LoginUser(
                 onNavigateToRegister = {
@@ -66,6 +73,7 @@ fun NavigationGraph(navController: NavHostController) {
         }
 
         composable(AppDestinations.HomeScreen.route) {
+            isBottomBarVisible(true)
             Log.d(TAG, "Navigated to: HomeScreen")
             AppHome(
                 onNavigateToLogin = {
