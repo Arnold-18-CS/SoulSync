@@ -102,7 +102,7 @@ fun NavigationGraph(
             Log.d(TAG, "Navigated to: Quotes Screen")
             Quotes(
                 onNavigateToStart = {
-                    Log.d(TAG, "Navigated to: StartScreen, from HomeScreen")
+                    Log.d(TAG, "Navigated to: StartScreen, from QuotesScreen")
                     navController.navigate(AppDestinations.StartScreen.route)
                 },
             )
@@ -113,7 +113,7 @@ fun NavigationGraph(
             Log.d(TAG, "Navigated to: Memories Screen")
             Memories(
                 onNavigateToStart = {
-                    Log.d(TAG, "Navigated to: StartScreen, from HomeScreen")
+                    Log.d(TAG, "Navigated to: StartScreen, from MemoriesScreen")
                     navController.navigate(AppDestinations.StartScreen.route)
                 },
             )
@@ -124,7 +124,7 @@ fun NavigationGraph(
             Log.d(TAG, "Navigated to: Outbox Screen")
             Outbox(
                 onNavigateToStart = {
-                    Log.d(TAG, "Navigated to: StartScreen, from HomeScreen")
+                    Log.d(TAG, "Navigated to: StartScreen, from OutboxScreen")
                     navController.navigate(AppDestinations.StartScreen.route)
                 },
             )
