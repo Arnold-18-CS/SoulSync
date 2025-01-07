@@ -13,9 +13,11 @@ import com.example.soulsync.auth.AuthViewModel
 import com.example.soulsync.ui.theme.BackgroundImage
 import com.example.soulsync.ui.theme.SSPrimaryButton
 
+private const val TAG = "Memories"
+
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun MemoriesScreen(onNavigateToStart: () -> Unit = {}) {
+fun Memories(onNavigateToStart: () -> Unit = {}) {
     val authViewModel: AuthViewModel = hiltViewModel()
     BackgroundImage.Background {
         Column {
@@ -27,7 +29,7 @@ fun MemoriesScreen(onNavigateToStart: () -> Unit = {}) {
                 text = "Logout",
                 onClick = {
                     authViewModel.logout()
-                    Log.d("AppHome", "User logged out")
+                    Log.d(TAG, "User logged out")
                     onNavigateToStart()
                 },
             )

@@ -10,6 +10,9 @@ import com.example.soulsync.StartScreen
 import com.example.soulsync.auth.LoginUser
 import com.example.soulsync.auth.RegisterUser
 import com.example.soulsync.ui.home.AppHome
+import com.example.soulsync.ui.memories.Memories
+import com.example.soulsync.ui.outbox.Outbox
+import com.example.soulsync.ui.quotes.Quotes
 
 private const val TAG = "NavigationGraph"
 
@@ -76,14 +79,50 @@ fun NavigationGraph(
             isBottomBarVisible(true)
             Log.d(TAG, "Navigated to: HomeScreen")
             AppHome(
-                onNavigateToLogin = {
-                    Log.d(TAG, "Navigated to: LoginScreen, from HomeScreen")
-                    navController.navigate(AppDestinations.LoginScreen.route)
+                onNavigateToStart = {
+                    Log.d(TAG, "Navigated to: StartScreen, from HomeScreen")
+                    navController.navigate(AppDestinations.StartScreen.route)
                 },
-                onNavigateToRegister = {
-                    Log.d(TAG, "Navigated to: RegisterScreen, from HomeScreen")
-                    navController.navigate(AppDestinations.RegisterScreen.route)
+            )
+        }
+
+        composable(HomeDestinations.Home.route) {
+            isBottomBarVisible(true)
+            Log.d(TAG, "Navigated to: HomeScreen")
+            AppHome(
+                onNavigateToStart = {
+                    Log.d(TAG, "Navigated to: StartScreen, from HomeScreen")
+                    navController.navigate(AppDestinations.StartScreen.route)
                 },
+            )
+        }
+
+        composable(HomeDestinations.Quotes.route) {
+            isBottomBarVisible(true)
+            Log.d(TAG, "Navigated to: Quotes Screen")
+            Quotes(
+                onNavigateToStart = {
+                    Log.d(TAG, "Navigated to: StartScreen, from HomeScreen")
+                    navController.navigate(AppDestinations.StartScreen.route)
+                },
+            )
+        }
+
+        composable(HomeDestinations.Memories.route) {
+            isBottomBarVisible(true)
+            Log.d(TAG, "Navigated to: Memories Screen")
+            Memories(
+                onNavigateToStart = {
+                    Log.d(TAG, "Navigated to: StartScreen, from HomeScreen")
+                    navController.navigate(AppDestinations.StartScreen.route)
+                },
+            )
+        }
+
+        composable(HomeDestinations.Outbox.route) {
+            isBottomBarVisible(true)
+            Log.d(TAG, "Navigated to: Outbox Screen")
+            Outbox(
                 onNavigateToStart = {
                     Log.d(TAG, "Navigated to: StartScreen, from HomeScreen")
                     navController.navigate(AppDestinations.StartScreen.route)

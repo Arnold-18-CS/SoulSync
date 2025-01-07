@@ -13,6 +13,8 @@ import com.example.soulsync.auth.AuthViewModel
 import com.example.soulsync.ui.theme.BackgroundImage
 import com.example.soulsync.ui.theme.SSPrimaryButton
 
+private const val TAG = "Quotes"
+
 @Suppress("ktlint:standard:function-naming")
 @Composable
 fun Quotes(onNavigateToStart: () -> Unit = {}) {
@@ -27,7 +29,7 @@ fun Quotes(onNavigateToStart: () -> Unit = {}) {
                 text = "Logout",
                 onClick = {
                     authViewModel.logout()
-                    Log.d("AppHome", "User logged out")
+                    Log.d(TAG, "User logged out")
                     onNavigateToStart()
                 },
             )

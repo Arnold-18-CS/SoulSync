@@ -13,13 +13,11 @@ import com.example.soulsync.auth.AuthViewModel
 import com.example.soulsync.ui.theme.BackgroundImage
 import com.example.soulsync.ui.theme.SSPrimaryButton
 
+private const val TAG = "Home"
+
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun AppHome(
-    onNavigateToLogin: () -> Unit = {},
-    onNavigateToRegister: () -> Unit = {},
-    onNavigateToStart: () -> Unit = {},
-) {
+fun AppHome(onNavigateToStart: () -> Unit = {}) {
     val authViewModel: AuthViewModel = hiltViewModel()
     BackgroundImage.Background {
         Column {
@@ -31,7 +29,7 @@ fun AppHome(
                 text = "Logout",
                 onClick = {
                     authViewModel.logout()
-                    Log.d("AppHome", "User logged out")
+                    Log.d(TAG, "User logged out")
                     onNavigateToStart()
                 },
             )
