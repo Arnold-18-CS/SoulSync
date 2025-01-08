@@ -10,10 +10,12 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 /**
@@ -89,7 +91,13 @@ class AuthViewModel
                     val result = signInWithFirebase(email, password)
                     result.fold(
                         onSuccess = {
-                            _loginState.value = LoginState.Success
+                            if (auth.currentUser?.isEmailVerified == true) {
+                                _loginState.value = LoginState.Success
+                            } else {
+                                _loginState.value = LoginState.Error("Email not verified, verification email is being resent.")
+                                auth.currentUser?.sendEmailVerification()
+                                logout()
+                            }
                         },
                         onFailure = { exception ->
                             _loginState.value = LoginState.Error(exception.message ?: "Login failed")
@@ -107,9 +115,14 @@ class AuthViewModel
 
         // Sealed class to represent the different states of the registration process
         sealed class RegisterState {
-            object Initial : RegisterState() // Initial state when no registration attempt is in progress
+            object Initial :
+                RegisterState() // Initial state when no registration attempt is in progress
 
-            object Loading : RegisterState() // State indicating that the registration process is in progress
+            object Loading :
+                RegisterState() // State indicating that the registration process is in progress
+
+            object EmailVerificationPending :
+                RegisterState() // State indicating that an email has been sent to verify a new user
 
             data class Error(
                 val message: String,
@@ -122,7 +135,10 @@ class AuthViewModel
         private val _registerState = MutableStateFlow<RegisterState>(RegisterState.Initial)
         val registerState: StateFlow<RegisterState> = _registerState
 
-        @OptIn(ExperimentalCoroutinesApi::class)
+        private val _isEmailVerified = MutableStateFlow(false)
+        val isEmailVerified: StateFlow<Boolean> = _isEmailVerified
+
+        @OptIn(ExperimentalCoroutinesApi::class, InternalCoroutinesApi::class)
         private suspend fun registerUserWithFirebase(
             email: String,
             password: String,
@@ -132,16 +148,40 @@ class AuthViewModel
                     .createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            continuation.resume(Result.success(Unit), null)
+                            // Send verification email
+                            auth.currentUser
+                                ?.sendEmailVerification()
+                                ?.addOnCompleteListener { verificationTask ->
+                                    if (verificationTask.isSuccessful) {
+                                        _registerState.value = RegisterState.EmailVerificationPending
+                                        val resumeSuccess = continuation.tryResume(Result.success(Unit))
+                                        if (resumeSuccess != null) {
+                                            continuation.completeResume(resumeSuccess)
+                                        }
+                                    } else {
+                                        val errorMessage = "Failed to send verification email."
+                                        _registerState.value = RegisterState.Error(errorMessage)
+                                        val resumeFailure =
+                                            continuation.tryResume(Result.failure(Exception(errorMessage)))
+                                        if (resumeFailure != null) {
+                                            continuation.completeResume(resumeFailure)
+                                        }
+                                    }
+                                }
                         } else {
                             val errorMessage =
                                 when (task.exception) {
-                                    is FirebaseAuthWeakPasswordException -> "Password is too weak.\n *Must be at least 8 characters"
-                                    is FirebaseAuthInvalidCredentialsException -> "Incorrect email format"
-                                    is FirebaseAuthUserCollisionException -> "Account already exists with this email"
-                                    else -> "Registration failed. Please try again"
+                                    is FirebaseAuthWeakPasswordException -> "Password is too weak.\n *Must be at least 8 characters."
+                                    is FirebaseAuthInvalidCredentialsException -> "Incorrect email format."
+                                    is FirebaseAuthUserCollisionException -> "An account already exists with this email."
+                                    else -> "Registration failed. Please try again."
                                 }
                             _registerState.value = RegisterState.Error(errorMessage)
+                            val resumeFailure =
+                                continuation.tryResume(Result.failure(Exception(errorMessage)))
+                            if (resumeFailure != null) {
+                                continuation.completeResume(resumeFailure)
+                            }
                         }
                     }
             }
@@ -165,6 +205,61 @@ class AuthViewModel
                     )
                 } catch (e: Exception) {
                     RegisterState.Error(e.message ?: "Registration failed")
+                }
+            }
+        }
+
+        private var isCheckingVerification = false
+
+        fun checkEmailVerification() {
+            if (isCheckingVerification) return
+            isCheckingVerification = true
+
+            viewModelScope.launch {
+                // Ensure currentUser is not null
+                val currentUser = auth.currentUser
+                if (currentUser == null) {
+                    _registerState.value = RegisterState.Error("User not logged in")
+                    return@launch
+                }
+
+                try {
+                    // Reload user info
+                    currentUser.reload().await()
+
+                    // Check email verification status
+                    val isVerified = currentUser.isEmailVerified
+                    _isEmailVerified.value = isVerified
+
+                    if (isVerified) {
+                        // Email verified
+                        _registerState.value = RegisterState.Success
+                    } else {
+                        // Email not yet verified
+                        if (_registerState.value != RegisterState.EmailVerificationPending) {
+                            _registerState.value = RegisterState.EmailVerificationPending
+                        }
+                    }
+                } catch (e: Exception) {
+                    // Handle errors gracefully
+                    _registerState.value =
+                        RegisterState.Error(
+                            e.message ?: "Failed to check email verification status",
+                        )
+                } finally {
+                    isCheckingVerification = false // Reset flag
+                }
+            }
+        }
+
+        fun resendVerificationEmail() {
+            viewModelScope.launch {
+                try {
+                    _registerState.value = RegisterState.Loading
+                    auth.currentUser?.sendEmailVerification()?.await()
+                    _registerState.value = RegisterState.EmailVerificationPending
+                } catch (e: Exception) {
+                    _registerState.value = RegisterState.Error(e.message ?: "Email verification failed")
                 }
             }
         }
