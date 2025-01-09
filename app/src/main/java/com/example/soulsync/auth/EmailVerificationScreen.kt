@@ -60,10 +60,8 @@ fun VerifyEmail(
             delay(3000)
             authViewModel.checkEmailVerification()
         }
-        if (isEmailVerified) {
-            Log.d(TAG, "Email has been verified, Navigating to Login Screen")
-            onNavigateToLogin()
-        }
+        Log.d(TAG, "Email has been verified, Navigating to Login Screen")
+        onNavigateToLogin()
     }
 
     BackgroundImage.Background {
