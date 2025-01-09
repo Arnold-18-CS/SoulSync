@@ -73,11 +73,11 @@ fun VerifyEmail(
         ) {
             Text(
                 text = "Verification Email has been sent! Please check your inbox",
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 color = AppColors.SSBlack,
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             SSSecondaryButton(
                 text = "Resend Verification Email",
