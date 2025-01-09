@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soulsync.ui.theme.AppColors
+import com.example.soulsync.ui.theme.BackgroundImage
 import com.example.soulsync.ui.theme.SSSecondaryButton
 import kotlinx.coroutines.delay
 
@@ -65,43 +66,45 @@ fun VerifyEmail(
         }
     }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(16.dp),
-    ) {
-        Text(
-            text = "Verification Email has been sent! Please check your inbox",
-            fontSize = 16.sp,
-            color = AppColors.SSBlack,
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        SSSecondaryButton(
-            text = "Resend Verification Email",
-            onClick = {
-                authViewModel.resendVerificationEmail()
-            },
-            modifier = Modifier.size(width = 200.dp, height = 70.dp),
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (registerState is AuthViewModel.RegisterState.Error) {
-            val errorMessage = (registerState as AuthViewModel.RegisterState.Error).message
-
+    BackgroundImage.Background {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(16.dp),
+        ) {
             Text(
-                text = errorMessage,
-                color = Color.Red,
+                text = "Verification Email has been sent! Please check your inbox",
                 fontSize = 16.sp,
-                modifier = Modifier.padding(5.dp),
+                color = AppColors.SSBlack,
             )
-        }
 
-        Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-        if (registerState is AuthViewModel.RegisterState.Loading) {
-            CircularProgressIndicator(modifier = Modifier.padding(20.dp))
+            SSSecondaryButton(
+                text = "Resend Verification Email",
+                onClick = {
+                    authViewModel.resendVerificationEmail()
+                },
+                modifier = Modifier.size(width = 300.dp, height = 70.dp),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (registerState is AuthViewModel.RegisterState.Error) {
+                val errorMessage = (registerState as AuthViewModel.RegisterState.Error).message
+
+                Text(
+                    text = errorMessage,
+                    color = Color.Red,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(5.dp),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            if (registerState is AuthViewModel.RegisterState.Loading) {
+                CircularProgressIndicator(modifier = Modifier.padding(20.dp))
+            }
         }
     }
 }

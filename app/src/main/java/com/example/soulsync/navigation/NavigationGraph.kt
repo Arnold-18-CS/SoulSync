@@ -69,6 +69,7 @@ fun NavigationGraph(
             VerifyEmail(
                 onNavigateToLogin = {
                     Log.d(TAG, "Navigated to: LoginScreen from EmailVerificationScreen")
+                    navController.navigate(AppDestinations.LoginScreen.route)
                 },
             )
         }
