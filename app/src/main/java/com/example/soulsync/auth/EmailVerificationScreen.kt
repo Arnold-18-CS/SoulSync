@@ -72,7 +72,7 @@ fun VerifyEmail(
             modifier = Modifier.padding(16.dp),
         ) {
             Text(
-                text = "Verification Email has been sent! Please check your inbox",
+                text = "Verification Email has been sent!\n Please check your inbox",
                 fontSize = 18.sp,
                 color = AppColors.SSBlack,
             )
