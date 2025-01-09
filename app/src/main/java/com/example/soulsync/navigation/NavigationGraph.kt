@@ -9,6 +9,7 @@ import com.example.soulsync.SplashScreen
 import com.example.soulsync.StartScreen
 import com.example.soulsync.auth.LoginUser
 import com.example.soulsync.auth.RegisterUser
+import com.example.soulsync.auth.VerifyEmail
 import com.example.soulsync.ui.home.AppHome
 import com.example.soulsync.ui.memories.Memories
 import com.example.soulsync.ui.outbox.Outbox
@@ -52,8 +53,22 @@ fun NavigationGraph(
             Log.d(TAG, "Navigated to: RegisterScreen")
             RegisterUser(
                 onNavigateToLogin = {
-                    Log.d(TAG, "Navigated to: LoginScreen, from RegisterScreen")
+                    Log.d(TAG, "Navigated to: Login Screen, from RegisterScreen")
                     navController.navigate(AppDestinations.LoginScreen.route)
+                },
+                onNavigateToEmailVerify = {
+                    Log.d(TAG, "Navigated to: Email Verification, from RegisterScreen")
+                    navController.navigate(AppDestinations.EmailVerificationScreen.route)
+                },
+            )
+        }
+
+        composable(AppDestinations.EmailVerificationScreen.route) {
+            isBottomBarVisible(false)
+            Log.d(TAG, "Navigated to: Email Verification Screen")
+            VerifyEmail(
+                onNavigateToLogin = {
+                    Log.d(TAG, "Navigated to: LoginScreen from EmailVerificationScreen")
                 },
             )
         }
