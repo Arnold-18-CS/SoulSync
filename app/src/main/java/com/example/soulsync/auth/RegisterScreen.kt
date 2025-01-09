@@ -35,7 +35,6 @@ import com.example.soulsync.ui.theme.BackgroundImage
 import com.example.soulsync.ui.theme.EmailTextField
 import com.example.soulsync.ui.theme.PasswordTextField
 import com.example.soulsync.ui.theme.SSPrimaryButton
-import com.example.soulsync.ui.theme.SSSecondaryButton
 import kotlinx.coroutines.delay
 
 private const val TAG = "RegisterScreen"
@@ -43,10 +42,14 @@ private const val TAG = "RegisterScreen"
 @Suppress("ktlint:standard:function-naming")
 /**
  * RegisterScreen allows users to register using email.
- * @param onNavigateToLogin Callback if the user already has an account.
+ * @param onNavigateToEmailVerify Callback for email verification after successful sign up.
+ * @param onNavigateToLogin Callback if the user already has an account
  */
 @Composable
-fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
+fun RegisterUser(
+    onNavigateToEmailVerify: () -> Unit = {},
+    onNavigateToLogin: () -> Unit = {},
+) {
     // Logging on screen entry
     LaunchedEffect(Unit) {
         Log.d(TAG, "Register Screen Entered")
@@ -68,7 +71,6 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
     // Observe the registration state using the authViewModel
     val authViewModel: AuthViewModel = hiltViewModel()
     val registerState by authViewModel.registerState.collectAsState()
-    val isEmailVerified by authViewModel.isEmailVerified.collectAsState()
 
     BackgroundImage.Background {
         Column(
@@ -139,8 +141,8 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                         interactionSource = remember { MutableInteractionSource() },
                         indication = LocalIndication.current,
                     ) {
-                        Log.v(TAG, "Navigate to Login, from Register")
-                        onNavigateToLogin()
+                        Log.v(TAG, "Navigate to Email Verification Screen, from Register")
+                        onNavigateToEmailVerify()
                     },
             )
 
@@ -152,9 +154,9 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                     if (email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty()) {
                         Log.v(TAG, "Register button pressed, all values filled")
                         if (password.value == confirmPassword.value) {
-                            Log.v(TAG, "Passwords match, login in process started")
+                            Log.v(TAG, "Passwords match, registration process started")
                             authViewModel.registerUser(email.value, password.value)
-                            Log.i(TAG, "Login in process successful")
+                            Log.i(TAG, "Registration process successful")
                         } else {
                             authViewModel.setRegisterState(message = "Passwords do not match")
                             Log.w(TAG, "Displaying validation error \"Passwords do not match\"")
@@ -168,19 +170,6 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                 enabled = email.value.isNotEmpty() && password.value.isNotEmpty() && confirmPassword.value.isNotEmpty(),
                 modifier = Modifier.size(width = 350.dp, height = 70.dp),
             )
-
-            LaunchedEffect(registerState) {
-                if (registerState is AuthViewModel.RegisterState.EmailVerificationPending) {
-                    while (!isEmailVerified) {
-                        delay(3000)
-                        authViewModel.checkEmailVerification()
-                    }
-                }
-                if (registerState is AuthViewModel.RegisterState.Success && isEmailVerified) {
-                    delay(1500)
-                    onNavigateToLogin()
-                }
-            }
 
             // Display the registration state using the authViewModel
             when (registerState) {
@@ -203,29 +192,6 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                     }
                 }
 
-                // To confirm user email
-                is AuthViewModel.RegisterState.EmailVerificationPending -> {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(16.dp),
-                    ) {
-                        Text(
-                            text = "Verification email has been sent! \n Please check your inbox and click the verification link.",
-                            color = AppColors.SSBlack,
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(top = 8.dp),
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        SSSecondaryButton(
-                            text = "Resend Verification Email",
-                            onClick = {
-                                authViewModel.resendVerificationEmail()
-                            },
-                            modifier = Modifier.size(width = 150.dp, height = 70.dp),
-                        )
-                    }
-                }
-
                 // Run on Successful Registration
                 is AuthViewModel.RegisterState.Success -> {
                     Log.i(TAG, "Registration successful")
@@ -235,10 +201,10 @@ fun RegisterUser(onNavigateToLogin: () -> Unit = {}) {
                         fontSize = 14.sp,
                         modifier = Modifier.padding(top = 8.dp),
                     )
-                    Log.d(TAG, "Navigating to Login, from Register")
+                    Log.d(TAG, "Navigating to Email Verification, from Register")
                     LaunchedEffect(Unit) {
                         delay(1500)
-                        onNavigateToLogin()
+                        onNavigateToEmailVerify()
                     }
                 } else -> Unit // Initial State
             }
