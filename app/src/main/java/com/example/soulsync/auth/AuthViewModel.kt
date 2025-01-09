@@ -1,5 +1,6 @@
 package com.example.soulsync.auth
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseNetworkException
@@ -17,6 +18,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+
+private const val TAG = "AuthViewModel"
 
 /**
  * AuthViewModel handles the authentication process.
@@ -230,7 +233,8 @@ class AuthViewModel
                     // Check email verification status
                     val isVerified = currentUser.isEmailVerified
                     _isEmailVerified.value = isVerified
-
+                    Log.d(TAG, "Checking email verification...")
+                    Log.d(TAG, "Email verified: $isVerified")
                     if (isVerified) {
                         // Email verified
                         _registerState.value = RegisterState.Success
