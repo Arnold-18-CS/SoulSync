@@ -7,9 +7,11 @@ sealed class AppDestinations(
 
     object StartScreen : AppDestinations("startScreen")
 
-    object LoginScreen : AppDestinations("loginScreen")
-
     object RegisterScreen : AppDestinations("registerScreen")
+
+    object EmailVerificationScreen : AppDestinations("emailVerificationScreen")
+
+    object LoginScreen : AppDestinations("loginScreen")
 
     object HomeScreen : AppDestinations("homeScreen")
 }
