@@ -300,17 +300,13 @@ class AuthViewModel
                 auth
                     .sendPasswordResetEmail(email)
                     .addOnSuccessListener {
+                        Log.d("ResetPassword", "Reset state: ${resetState.value}")
                         continuation.resume(Result.success(Unit), null)
                     }.addOnFailureListener { exception ->
+                        Log.d("ResetPassword", "Reset state: ${resetState.value}")
                         val errorMessage =
                             when (exception) {
-                                is FirebaseAuthInvalidUserException -> {
-                                    when (exception.errorCode) {
-                                        "ERROR_USER_NOT_FOUND" -> "No account found with this email"
-                                        "ERROR_USER_DISABLED" -> "This account has been disabled"
-                                        else -> "Invalid user account"
-                                    }
-                                }
+                                is FirebaseAuthInvalidUserException -> "User does not exist or account is disabled"
                                 is FirebaseAuthInvalidCredentialsException -> "Invalid email format"
                                 is FirebaseNetworkException -> "Network error. Please check your connection"
                                 else -> "Failed to send reset email: ${exception.message}"
@@ -344,5 +340,13 @@ class AuthViewModel
                     _resetState.value = PasswordResetState.Error(e.message ?: "Password reset failed")
                 }
             }
+        }
+
+        fun setResetError(message: String) {
+            _resetState.value = PasswordResetState.Error(message)
+        }
+
+        fun clearResetState() {
+            _resetState.value = PasswordResetState.Initial
         }
     }

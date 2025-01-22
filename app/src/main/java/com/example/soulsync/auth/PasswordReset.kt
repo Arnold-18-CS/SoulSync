@@ -71,7 +71,12 @@ fun ResetPassword(onNavigateToLogin: () -> Unit = {}) {
 
             DefaultTextField(
                 text = email.value,
-                onTextChange = { email.value = it },
+                onTextChange = {
+                    email.value = it
+                    if (resetState is AuthViewModel.PasswordResetState.Error && it.isNotEmpty()) {
+                        authViewModel.clearResetState()
+                    }
+                },
                 modifier = Modifier.size(width = 300.dp, height = 70.dp),
             )
 
@@ -85,32 +90,43 @@ fun ResetPassword(onNavigateToLogin: () -> Unit = {}) {
                     Log.d(TAG, "Password Reset Email has been sent, Navigating to Login Screen")
                 },
                 modifier = Modifier.size(width = 300.dp, height = 70.dp),
+                enabled =
+                    email.value.isNotEmpty() &&
+                        resetState !is AuthViewModel.PasswordResetState.Loading,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (resetState is AuthViewModel.PasswordResetState.Error) {
-                val errorMessage = (resetState as AuthViewModel.PasswordResetState.Error).message
-
-                Text(
-                    text = errorMessage,
-                    color = Color.Red,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(5.dp),
-                )
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            if (resetState is AuthViewModel.PasswordResetState.Loading) {
-                CircularProgressIndicator(modifier = Modifier.padding(20.dp))
-            }
-
-            if (resetState is AuthViewModel.PasswordResetState.Success) {
-                LaunchedEffect(Unit) {
-                    delay(3000)
-                    onNavigateToLogin()
+            when (resetState) {
+                is AuthViewModel.PasswordResetState.Error -> {
+                    val errorMessage = (resetState as AuthViewModel.PasswordResetState.Error).message
+                    Text(
+                        text = errorMessage,
+                        color = Color.Red,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(5.dp),
+                    )
+                    LaunchedEffect(errorMessage) {
+                        Log.e(TAG, "Password reset error: $errorMessage")
+                    }
                 }
+                is AuthViewModel.PasswordResetState.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.padding(20.dp))
+                }
+                is AuthViewModel.PasswordResetState.Success -> {
+                    Text(
+                        text = "Password reset email sent successfully!",
+                        color = Color.Green,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(5.dp),
+                    )
+                    LaunchedEffect(Unit) {
+                        Log.d(TAG, "Password Reset Email sent successfully, navigating to Login Screen")
+                        delay(3000)
+                        onNavigateToLogin()
+                    }
+                }
+                else -> { /* Initial state - no action needed */ }
             }
         }
     }
