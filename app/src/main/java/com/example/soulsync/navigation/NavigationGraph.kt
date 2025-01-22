@@ -83,6 +83,10 @@ fun NavigationGraph(
                     Log.d(TAG, "Navigated to: RegisterScreen, from LoginScreen")
                     navController.navigate(AuthDestinations.RegisterScreen.route)
                 },
+                onNavigateToResetPassword = {
+                    Log.d(TAG, "Navigated to: Password Reset Screen, from LoginScreen")
+                    navController.navigate(AuthDestinations.PasswordResetScreen.route)
+                },
                 onNavigateToHome = {
                     Log.d(TAG, "Navigated to: HomeScreen, from LoginScreen")
                     navController.navigate(AuthDestinations.HomeScreen.route) {

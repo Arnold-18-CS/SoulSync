@@ -38,8 +38,10 @@ private const val TAG = "LoginScreen"
 /**
  * LoginScreen allows users to navigate to login using email.
  * @param onNavigateToRegister Callback when the user does not have an account.
+ * @param onNavigateToResetPassword Callback when the user has forgotten their password
  * @param onNavigateToHome Callback when the login is successful.
  */
+
 @Composable
 fun LoginUser(
     onNavigateToRegister: () -> Unit = {},
