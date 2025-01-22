@@ -128,7 +128,11 @@ fun LoginUser(
                 fontWeight = FontWeight.Bold,
                 color = AppColors.SSPrimaryPurple,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { /*TODO*/ },
+                modifier =
+                    Modifier.clickable {
+                        Log.d(TAG, " Sending Password Rest Email")
+                        authViewModel.resetPassword(email.value)
+                    },
             )
 
             Spacer(modifier = Modifier.padding(20.dp))
