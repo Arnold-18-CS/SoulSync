@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soulsync.ui.theme.AppColors
 import com.example.soulsync.ui.theme.BackgroundImage
-import com.example.soulsync.ui.theme.EmailTextField
+import com.example.soulsync.ui.theme.DefaultTextField
 import com.example.soulsync.ui.theme.PasswordTextField
 import com.example.soulsync.ui.theme.SSPrimaryButton
 
@@ -98,7 +98,7 @@ fun LoginUser(
             Spacer(modifier = Modifier.padding(15.dp))
 
             // Email text field
-            EmailTextField(
+            DefaultTextField(
                 text = email.value,
                 onTextChange = {
                     email.value = it

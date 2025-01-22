@@ -35,7 +35,7 @@ import com.example.soulsync.navigation.HomeDestinations
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun EmailTextField(
+fun DefaultTextField(
     text: String,
     onTextChange: (String) -> Unit,
     label: String = "Email",

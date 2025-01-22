@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soulsync.ui.theme.AppColors
 import com.example.soulsync.ui.theme.BackgroundImage
-import com.example.soulsync.ui.theme.EmailTextField
+import com.example.soulsync.ui.theme.DefaultTextField
 import com.example.soulsync.ui.theme.PasswordTextField
 import com.example.soulsync.ui.theme.SSPrimaryButton
 import kotlinx.coroutines.delay
@@ -86,7 +86,7 @@ fun RegisterUser(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            EmailTextField(
+            DefaultTextField(
                 text = email.value,
                 onTextChange = {
                     email.value = it
