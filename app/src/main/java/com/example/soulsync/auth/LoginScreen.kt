@@ -43,6 +43,7 @@ private const val TAG = "LoginScreen"
 @Composable
 fun LoginUser(
     onNavigateToRegister: () -> Unit = {},
+    onNavigateToResetPassword: () -> Unit = {},
     onNavigateToHome: () -> Unit = {},
 ) {
     // Logging on screen entry
@@ -130,8 +131,8 @@ fun LoginUser(
                 textDecoration = TextDecoration.Underline,
                 modifier =
                     Modifier.clickable {
-                        Log.d(TAG, " Sending Password Rest Email")
-                        authViewModel.resetPassword(email.value)
+                        Log.d(TAG, "Navigate to Reset Password, from Login")
+                        onNavigateToResetPassword()
                     },
             )
 
