@@ -7,7 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.soulsync.navigation.AppDestinations
+import com.example.soulsync.navigation.AuthDestinations
 import com.example.soulsync.ui.theme.BackgroundImage
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
@@ -19,12 +19,12 @@ fun SplashScreen(navController: NavController) {
 
     LaunchedEffect(Unit) {
         if (currentUser != null) {
-            navController.navigate(AppDestinations.HomeScreen.route) {
-                popUpTo(AppDestinations.MainSplashScreen.route) { inclusive = true }
+            navController.navigate(AuthDestinations.HomeScreen.route) {
+                popUpTo(AuthDestinations.MainSplashScreen.route) { inclusive = true }
             }
         } else {
-            navController.navigate(AppDestinations.StartScreen.route) {
-                popUpTo(AppDestinations.MainSplashScreen.route) { inclusive = true }
+            navController.navigate(AuthDestinations.StartScreen.route) {
+                popUpTo(AuthDestinations.MainSplashScreen.route) { inclusive = true }
             }
         }
     }

@@ -9,6 +9,7 @@ import com.example.soulsync.SplashScreen
 import com.example.soulsync.StartScreen
 import com.example.soulsync.auth.LoginUser
 import com.example.soulsync.auth.RegisterUser
+import com.example.soulsync.auth.ResetPassword
 import com.example.soulsync.auth.VerifyEmail
 import com.example.soulsync.ui.home.AppHome
 import com.example.soulsync.ui.memories.Memories
@@ -25,79 +26,90 @@ fun NavigationGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AppDestinations.MainSplashScreen.route,
+        startDestination = AuthDestinations.MainSplashScreen.route,
     ) {
-        composable(route = AppDestinations.MainSplashScreen.route) {
+        composable(route = AuthDestinations.MainSplashScreen.route) {
             isBottomBarVisible(false)
             Log.d(TAG, "Navigated to: SplashScreen")
             SplashScreen(navController = navController)
         }
 
-        composable(route = AppDestinations.StartScreen.route) {
+        composable(route = AuthDestinations.StartScreen.route) {
             isBottomBarVisible(false)
             Log.d(TAG, "Navigated to: StartScreen")
             StartScreen(
                 onNavigateToLogin = {
                     Log.d(TAG, "Navigated to: LoginScreen, from StartScreen")
-                    navController.navigate(AppDestinations.LoginScreen.route)
+                    navController.navigate(AuthDestinations.LoginScreen.route)
                 },
                 onNavigateToRegister = {
                     Log.d(TAG, "Navigated to: RegisterScreen, from StartScreen")
-                    navController.navigate(AppDestinations.RegisterScreen.route)
+                    navController.navigate(AuthDestinations.RegisterScreen.route)
                 },
             )
         }
 
-        composable(AppDestinations.RegisterScreen.route) {
+        composable(AuthDestinations.RegisterScreen.route) {
             isBottomBarVisible(false)
             Log.d(TAG, "Navigated to: RegisterScreen")
             RegisterUser(
                 onNavigateToLogin = {
                     Log.d(TAG, "Navigated to: Login Screen, from RegisterScreen")
-                    navController.navigate(AppDestinations.LoginScreen.route)
+                    navController.navigate(AuthDestinations.LoginScreen.route)
                 },
                 onNavigateToEmailVerify = {
                     Log.d(TAG, "Navigated to: Email Verification, from RegisterScreen")
-                    navController.navigate(AppDestinations.EmailVerificationScreen.route)
+                    navController.navigate(AuthDestinations.EmailVerificationScreen.route)
                 },
             )
         }
 
-        composable(AppDestinations.EmailVerificationScreen.route) {
+        composable(AuthDestinations.EmailVerificationScreen.route) {
             isBottomBarVisible(false)
             Log.d(TAG, "Navigated to: Email Verification Screen")
             VerifyEmail(
                 onNavigateToLogin = {
                     Log.d(TAG, "Navigated to: LoginScreen from EmailVerificationScreen")
-                    navController.navigate(AppDestinations.LoginScreen.route)
+                    navController.navigate(AuthDestinations.LoginScreen.route)
                 },
             )
         }
 
-        composable(AppDestinations.LoginScreen.route) {
+        composable(AuthDestinations.LoginScreen.route) {
             isBottomBarVisible(false)
             Log.d(TAG, "Navigated to: LoginScreen")
             LoginUser(
                 onNavigateToRegister = {
                     Log.d(TAG, "Navigated to: RegisterScreen, from LoginScreen")
-                    navController.navigate(AppDestinations.RegisterScreen.route)
+                    navController.navigate(AuthDestinations.RegisterScreen.route)
                 },
                 onNavigateToHome = {
                     Log.d(TAG, "Navigated to: HomeScreen, from LoginScreen")
-                    navController.navigate(AppDestinations.HomeScreen.route) {
-                        popUpTo(AppDestinations.LoginScreen.route) { inclusive = true }
+                    navController.navigate(AuthDestinations.HomeScreen.route) {
+                        popUpTo(AuthDestinations.LoginScreen.route) { inclusive = true }
                     }
                 },
             )
         }
 
-        composable(AppDestinations.HomeScreen.route) {
+        composable(AuthDestinations.PasswordResetScreen.route) {
+            isBottomBarVisible(false)
+            Log.d(TAG, "Navigated to: Password Reset Screen")
+            ResetPassword(
+                onNavigateToLogin = {
+                    Log.d(TAG, "Navigated to: LoginScreen from PasswordResetScreen")
+                    navController.navigate(AuthDestinations.LoginScreen.route)
+                },
+            )
+        }
+
+        composable(AuthDestinations.HomeScreen.route) {
             isBottomBarVisible(true)
             Log.d(TAG, "Navigated to: HomeScreen")
             AppHome(
                 onNavigateToStart = {
                     Log.d(TAG, "Navigated to: StartScreen, from HomeScreen")
-                    navController.navigate(AppDestinations.StartScreen.route)
+                    navController.navigate(AuthDestinations.StartScreen.route)
                 },
             )
         }
@@ -108,7 +120,7 @@ fun NavigationGraph(
             AppHome(
                 onNavigateToStart = {
                     Log.d(TAG, "Navigated to: StartScreen, from HomeScreen")
-                    navController.navigate(AppDestinations.StartScreen.route)
+                    navController.navigate(AuthDestinations.StartScreen.route)
                 },
             )
         }
@@ -119,7 +131,7 @@ fun NavigationGraph(
             Quotes(
                 onNavigateToStart = {
                     Log.d(TAG, "Navigated to: StartScreen, from QuotesScreen")
-                    navController.navigate(AppDestinations.StartScreen.route)
+                    navController.navigate(AuthDestinations.StartScreen.route)
                 },
             )
         }
@@ -130,7 +142,7 @@ fun NavigationGraph(
             Memories(
                 onNavigateToStart = {
                     Log.d(TAG, "Navigated to: StartScreen, from MemoriesScreen")
-                    navController.navigate(AppDestinations.StartScreen.route)
+                    navController.navigate(AuthDestinations.StartScreen.route)
                 },
             )
         }
@@ -141,7 +153,7 @@ fun NavigationGraph(
             Outbox(
                 onNavigateToStart = {
                     Log.d(TAG, "Navigated to: StartScreen, from OutboxScreen")
-                    navController.navigate(AppDestinations.StartScreen.route)
+                    navController.navigate(AuthDestinations.StartScreen.route)
                 },
             )
         }
