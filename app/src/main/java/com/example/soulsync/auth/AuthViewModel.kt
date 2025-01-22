@@ -97,7 +97,8 @@ class AuthViewModel
                             if (auth.currentUser?.isEmailVerified == true) {
                                 _loginState.value = LoginState.Success
                             } else {
-                                _loginState.value = LoginState.Error("Email not verified, verification email is being resent.")
+                                _loginState.value =
+                                    LoginState.Error("Email not verified, verification email is being resent.")
                                 auth.currentUser?.sendEmailVerification()
                                 logout()
                             }
@@ -203,7 +204,8 @@ class AuthViewModel
                             _registerState.value = RegisterState.Success
                         },
                         onFailure = { exception ->
-                            _registerState.value = RegisterState.Error(exception.message ?: "Registration failed")
+                            _registerState.value =
+                                RegisterState.Error(exception.message ?: "Registration failed")
                         },
                     )
                 } catch (e: Exception) {
@@ -275,5 +277,72 @@ class AuthViewModel
 
         fun logout() {
             FirebaseAuth.getInstance().signOut()
+        }
+
+        sealed class PasswordResetState {
+            object Initial : PasswordResetState()
+
+            object Loading : PasswordResetState()
+
+            data class Error(
+                val message: String,
+            ) : PasswordResetState()
+
+            object Success : PasswordResetState()
+        }
+
+        private val _resetState = MutableStateFlow<PasswordResetState>(PasswordResetState.Initial)
+        val resetState: StateFlow<PasswordResetState> = _resetState
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        private suspend fun resetPasswordWithFirebase(email: String): Result<Unit> =
+            suspendCancellableCoroutine { continuation ->
+                auth
+                    .sendPasswordResetEmail(email)
+                    .addOnSuccessListener {
+                        continuation.resume(Result.success(Unit), null)
+                    }.addOnFailureListener { exception ->
+                        val errorMessage =
+                            when (exception) {
+                                is FirebaseAuthInvalidUserException -> {
+                                    when (exception.errorCode) {
+                                        "ERROR_USER_NOT_FOUND" -> "No account found with this email"
+                                        "ERROR_USER_DISABLED" -> "This account has been disabled"
+                                        else -> "Invalid user account"
+                                    }
+                                }
+                                is FirebaseAuthInvalidCredentialsException -> "Invalid email format"
+                                is FirebaseNetworkException -> "Network error. Please check your connection"
+                                else -> "Failed to send reset email: ${exception.message}"
+                            }
+                        continuation.resume(
+                            Result.failure(Exception(errorMessage)),
+                            null,
+                        )
+                    }.addOnCanceledListener {
+                        continuation.resume(
+                            Result.failure(Exception("Password reset request was cancelled")),
+                            null,
+                        )
+                    }
+            }
+
+        fun resetPassword(email: String) {
+            viewModelScope.launch {
+                _resetState.value = PasswordResetState.Loading
+                try {
+                    val result = resetPasswordWithFirebase(email)
+                    result.fold(
+                        onSuccess = {
+                            _resetState.value = PasswordResetState.Success
+                        },
+                        onFailure = { exception ->
+                            _resetState.value = PasswordResetState.Error(exception.message ?: "Password reset failed")
+                        },
+                    )
+                } catch (e: Exception) {
+                    _resetState.value = PasswordResetState.Error(e.message ?: "Password reset failed")
+                }
+            }
         }
     }
