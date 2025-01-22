@@ -55,14 +55,6 @@ fun ResetPassword(onNavigateToLogin: () -> Unit = {}) {
     val authViewModel: AuthViewModel = hiltViewModel()
     val resetState by authViewModel.resetState.collectAsState()
 
-    // Check email verification state every 3 seconds
-    LaunchedEffect(Unit) {
-        authViewModel.resetPassword(email = email.value)
-        delay(3000)
-        Log.d(TAG, "Password Reset Email has been sent, Navigating to Login Screen")
-        onNavigateToLogin()
-    }
-
     BackgroundImage.Background {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -88,7 +80,9 @@ fun ResetPassword(onNavigateToLogin: () -> Unit = {}) {
             SSSecondaryButton(
                 text = "Send Password Reset Email",
                 onClick = {
+                    // Check email verification state every 3 seconds
                     authViewModel.resetPassword(email = email.value)
+                    Log.d(TAG, "Password Reset Email has been sent, Navigating to Login Screen")
                 },
                 modifier = Modifier.size(width = 300.dp, height = 70.dp),
             )
@@ -110,6 +104,13 @@ fun ResetPassword(onNavigateToLogin: () -> Unit = {}) {
 
             if (resetState is AuthViewModel.PasswordResetState.Loading) {
                 CircularProgressIndicator(modifier = Modifier.padding(20.dp))
+            }
+
+            if (resetState is AuthViewModel.PasswordResetState.Success) {
+                LaunchedEffect(Unit) {
+                    delay(3000)
+                    onNavigateToLogin()
+                }
             }
         }
     }
